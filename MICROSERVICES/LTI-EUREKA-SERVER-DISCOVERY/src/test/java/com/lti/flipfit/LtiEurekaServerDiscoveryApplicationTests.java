@@ -1,10 +1,10 @@
-package com.eureka.client;
+package com.lti.flipfit;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class EurekaServerV1ApplicationTests {
+class LtiEurekaServerDiscoveryApplicationTests {
 
 	@Test
 	void contextLoads() {
