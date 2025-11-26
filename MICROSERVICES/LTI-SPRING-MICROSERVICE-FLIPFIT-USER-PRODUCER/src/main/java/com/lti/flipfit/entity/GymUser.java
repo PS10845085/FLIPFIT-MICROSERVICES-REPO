@@ -43,32 +43,61 @@ public class GymUser {
 	 * 
 	 * @JoinColumn(name = "roleid", nullable = false)
 	 */
-    private Integer roleid;
+    private Long roleid;
 
     private String userstatus;
     
-    private Integer centerid;
+    private Long centerid;
     
-    public Integer getCenterid() {
+    @Column(name = "email", length = 100)
+    private String email;
+    
+    @Column(name = "mobile", length = 10)
+    private Long mobile;
+    
+    public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Long getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(Long mobile) {
+		this.mobile = mobile;
+	}
+
+	public Long getCenterid() {
 		return centerid;
 	}
 
-	public void setCenterid(Integer centerid) {
+	public void setCenterid(Long centerid) {
 		this.centerid = centerid;
 	}
 
 	// ✅ Constructors
     public GymUser() {}
 
-    public GymUser(String username, String password, LocalDateTime createdAt, Integer roleid, String userstatus) {
-        this.username = username;
-        this.password = password;
-        this.createdAt = createdAt;
-        this.roleid = roleid;
-        this.userstatus = userstatus;
-    }
+   
 
-    // ✅ Getters and Setters
+    public GymUser(String username, String password, LocalDateTime createdAt, Long roleid,
+			String userstatus, Long centerid, String email, Long mobile) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.createdAt = createdAt;
+		this.roleid = roleid;
+		this.userstatus = userstatus;
+		this.centerid = centerid;
+		this.email = email;
+		this.mobile = mobile;
+	}
+
+	// ✅ Getters and Setters
     public Long getUserId() {
         return userId;
     }
@@ -112,11 +141,11 @@ public class GymUser {
 	    this.createdAt = createdAt;
 	}
 
-    public Integer getRoleid() {
+    public Long getRoleid() {
 		return roleid;
 	}
 
-	public void setRoleid(Integer roleid) {
+	public void setRoleid(Long roleid) {
 		this.roleid = roleid;
 	}
 

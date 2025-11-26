@@ -12,9 +12,13 @@ public class User {
 
     private LocalDateTime createdAt;
 
-    private Integer roleid;
+    private Long roleid;
     
     private String userstatus;
     
-    private Integer centerid;
+    private Long centerid;
+    
+    private String email;
+    
+    private Long mobile;
 }

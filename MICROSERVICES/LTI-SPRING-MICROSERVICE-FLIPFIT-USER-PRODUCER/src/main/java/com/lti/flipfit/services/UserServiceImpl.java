@@ -95,11 +95,25 @@ public class UserServiceImpl implements UserService {
 	                .body(new ApiResponse("FAILURE", "Role is required", null));
 	    }
 	    
-	 // Validate role
+	 // Validate center
 	    if (userDto.getCenterid() == null) {
 	        return ResponseEntity.badRequest()
 	                .body(new ApiResponse("FAILURE", "Center is required for which you're applying", null));
 	    }
+	    
+	    
+	 // Validate email
+	    if (userDto.getEmail() == null) {
+	        return ResponseEntity.badRequest()
+	                .body(new ApiResponse("FAILURE", "Email is required", null));
+	    }
+		    
+		    
+	 // Validate mobile
+	    if (userDto.getMobile() == null) {
+	        return ResponseEntity.badRequest()
+	                .body(new ApiResponse("FAILURE", "Mobile is required", null));
+	    } 
 	
 	    // Create GymUser entity
 	    GymUser gymUser = new GymUser();
@@ -108,6 +122,8 @@ public class UserServiceImpl implements UserService {
 	    gymUser.setRoleid(userDto.getRoleid()); // Ensure GymRole exists
 	    gymUser.setCenterid(userDto.getCenterid());
 	    gymUser.setCreatedAt(LocalDateTime.now());
+	    gymUser.setEmail(userDto.getEmail());
+	    gymUser.setMobile(userDto.getMobile());
 	    gymUser.setUserstatus("PENDING");
 	
 	    // Save user

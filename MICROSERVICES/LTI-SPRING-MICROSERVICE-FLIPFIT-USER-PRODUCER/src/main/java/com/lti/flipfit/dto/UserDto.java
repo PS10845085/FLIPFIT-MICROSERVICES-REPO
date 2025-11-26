@@ -19,22 +19,38 @@ public class UserDto {
     private String password;
 	
 	@NotNull(message = "Role is required")
-    private Integer roleid;
+    private Long roleid;
 	
 	private String userstatus;
 	
-	private Integer centerid;
+	private Long centerid;
 	
+	private String email;
+	
+	private Long mobile;
+	
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public Long getMobile() {
+		return mobile;
+	}
+	public void setMobile(Long mobile) {
+		this.mobile = mobile;
+	}
 	public String getUserstatus() {
 		return userstatus;
 	}
 	public void setUserstatus(String userstatus) {
 		this.userstatus = userstatus;
 	}
-	public Integer getCenterid() {
+	public Long getCenterid() {
 		return centerid;
 	}
-	public void setCenterid(Integer centerid) {
+	public void setCenterid(Long centerid) {
 		this.centerid = centerid;
 	}
 	public String getUserStatus() {
@@ -55,10 +71,10 @@ public class UserDto {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public Integer getRoleid() {
+	public Long getRoleid() {
 		return roleid;
 	}
-	public void setRoleid(Integer roleid) {
+	public void setRoleid(Long roleid) {
 		this.roleid = roleid;
 	}
     
