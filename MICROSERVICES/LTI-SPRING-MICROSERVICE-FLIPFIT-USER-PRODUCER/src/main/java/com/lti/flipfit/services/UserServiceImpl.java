@@ -10,9 +10,15 @@ import org.springframework.stereotype.Service;
 
 import com.lti.flipfit.dto.LoginDto;
 import com.lti.flipfit.dto.UserDto;
+import com.lti.flipfit.entity.GymAddress;
 import com.lti.flipfit.entity.GymUser;
+import com.lti.flipfit.repository.GymAddressRepository;
 import com.lti.flipfit.repository.GymUserRepository;
 import com.lti.flipfit.response.ApiResponse;
+
+import jakarta.transaction.Transactional;
+
+import jakarta.validation.*;
 
 
 /*
@@ -44,6 +50,11 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+
+    @Autowired
+    private GymAddressRepository addressRepository;
+
 
 
 /*
@@ -74,6 +85,7 @@ public class UserServiceImpl implements UserService {
      */
 
 	@Override
+    @Transactional
 	public ResponseEntity<ApiResponse> register(UserDto userDto) {
 	    // Check username uniqueness
 
@@ -115,19 +127,47 @@ public class UserServiceImpl implements UserService {
 	                .body(new ApiResponse("FAILURE", "Mobile is required", null));
 	    } 
 	
-	    // Create GymUser entity
-	    GymUser gymUser = new GymUser();
-	    gymUser.setUsername(userDto.getUsername());
-	    gymUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
-	    gymUser.setRoleid(userDto.getRoleid()); // Ensure GymRole exists
-	    gymUser.setCenterid(userDto.getCenterid());
-	    gymUser.setCreatedAt(LocalDateTime.now());
-	    gymUser.setEmail(userDto.getEmail());
-	    gymUser.setMobile(userDto.getMobile());
-	    gymUser.setUserstatus("PENDING");
-	
-	    // Save user
-	    GymUser savedUser = userRepository.save(gymUser);
+
+
+
+        // (Optional) Validate essential address fields
+		/*
+		 * if (isBlank(userDto.getLine1()) || isBlank(userDto.getCity()) ||
+		 * isBlank(userDto.getPostalCode())) { return ResponseEntity.badRequest()
+		 * .body(new ApiResponse("FAILURE",
+		 * "Address line1, city, and postalCode are required", null)); }
+		 */
+	    System.out.println(userDto.getLine1()+"###################"+userDto.getCity()+"#####################"+ userDto.getPostalcode() );
+
+        // 1) Create & save GymAddress
+        GymAddress address = new GymAddress();
+        address.setLine1(userDto.getLine1());
+        address.setLine2(userDto.getLine2());
+        address.setCity(userDto.getCity());
+        address.setState(userDto.getState());
+        address.setPostalCode(userDto.getPostalcode());
+        address.setCountry(userDto.getCountry());
+
+        GymAddress savedAddress = addressRepository.save(address);
+
+        // 2) Create GymUser entity with FK to saved address
+        GymUser gymUser = new GymUser();
+        gymUser.setUsername(userDto.getUsername());
+        gymUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        gymUser.setRoleid(userDto.getRoleid());
+        gymUser.setCenterid(userDto.getCenterid());
+        gymUser.setCreatedAt(LocalDateTime.now());
+        gymUser.setEmail(userDto.getEmail());
+        gymUser.setMobile(userDto.getMobile());
+        gymUser.setUserstatus("PENDING");
+        gymUser.setAddress(savedAddress);
+
+        // Link address
+        gymUser.setAddress(savedAddress);
+
+        // Save user
+        GymUser savedUser = userRepository.save(gymUser);
+
 	
 	    // Return success response
 	    ApiResponse response = new ApiResponse("SUCCESS", "User registered successfully", savedUser);
@@ -180,6 +220,13 @@ public class UserServiceImpl implements UserService {
 		    ApiResponse response = new ApiResponse("SUCCESS", "Login successful", gymUser);
 		    return ResponseEntity.ok(response);
 		}
+		
+		
+
+		private boolean isBlank(String s) {
+		    return s == null || s.trim().isEmpty();
+		}
+
 
 
 
