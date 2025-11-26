@@ -17,5 +17,6 @@ import com.lti.flipfit.entity.GymUser;
 @Repository
 public interface GymUserRepository extends JpaRepository<GymUser, Long> {
     Optional<GymUser> findByUsername(String username);
+    Optional<GymUser> findByUsernameAndUserstatus(String username, String userstatus);
 }
 

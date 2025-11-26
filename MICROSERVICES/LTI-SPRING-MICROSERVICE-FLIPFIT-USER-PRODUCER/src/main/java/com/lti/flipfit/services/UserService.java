@@ -1,13 +1,16 @@
 package com.lti.flipfit.services;
 
-import com.lti.flipfit.dao.LoginDto;
-import com.lti.flipfit.dao.UserDto;
+import org.springframework.http.ResponseEntity;
+
+import com.lti.flipfit.dto.LoginDto;
+import com.lti.flipfit.dto.UserDto;
+import com.lti.flipfit.response.ApiResponse;
 
 
 public interface UserService {
 	
 
-    String register(UserDto userDto);
-    String login(LoginDto loginDto);
+	ResponseEntity<ApiResponse> register(UserDto userDto);
+	ResponseEntity<ApiResponse> login(LoginDto loginDto);
 
 }

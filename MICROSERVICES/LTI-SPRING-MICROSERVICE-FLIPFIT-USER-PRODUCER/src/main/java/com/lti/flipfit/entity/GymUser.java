@@ -5,6 +5,9 @@ package com.lti.flipfit.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+
+import com.lti.flipfit.constants.UserStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -42,14 +45,27 @@ public class GymUser {
 	 */
     private Integer roleid;
 
-    // ✅ Constructors
+    private String userstatus;
+    
+    private Integer centerid;
+    
+    public Integer getCenterid() {
+		return centerid;
+	}
+
+	public void setCenterid(Integer centerid) {
+		this.centerid = centerid;
+	}
+
+	// ✅ Constructors
     public GymUser() {}
 
-    public GymUser(String username, String password, LocalDateTime createdAt, Integer roleid) {
+    public GymUser(String username, String password, LocalDateTime createdAt, Integer roleid, String userstatus) {
         this.username = username;
         this.password = password;
         this.createdAt = createdAt;
         this.roleid = roleid;
+        this.userstatus = userstatus;
     }
 
     // ✅ Getters and Setters
@@ -84,16 +100,25 @@ public class GymUser {
     }
 
 
+	public String getUserstatus() {
+		return userstatus;
+	}
+
+	public void setUserstatus(String userstatus) {
+		this.userstatus = userstatus;
+	}
+
 	public void setCreatedAt(LocalDateTime createdAt) {
 	    this.createdAt = createdAt;
 	}
 
+    public Integer getRoleid() {
+		return roleid;
+	}
 
-    public Integer getRole() {
-        return roleid;
-    }
+	public void setRoleid(Integer roleid) {
+		this.roleid = roleid;
+	}
 
-    public void setRole(Integer roleid) {
-        this.roleid = roleid;
-    }
+	
 }

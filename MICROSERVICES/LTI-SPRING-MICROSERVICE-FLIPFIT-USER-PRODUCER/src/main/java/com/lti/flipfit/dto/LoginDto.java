@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.lti.flipfit.dao;
+package com.lti.flipfit.dto;
 
 /**
  * 
