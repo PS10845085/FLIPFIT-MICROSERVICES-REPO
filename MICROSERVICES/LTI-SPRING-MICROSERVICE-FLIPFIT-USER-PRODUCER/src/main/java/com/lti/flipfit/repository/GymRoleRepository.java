@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.lti.flipfit.entity.GymRole;
 
 @Repository
-public interface GymRoleRepository extends JpaRepository<GymRole, Integer> {
+public interface GymRoleRepository extends JpaRepository<GymRole, Long> {
 
 }

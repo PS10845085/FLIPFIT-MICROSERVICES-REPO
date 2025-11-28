@@ -1,8 +1,12 @@
 package com.lti.flipfit.services;
 
-import java.time.LocalDateTime;  
+import java.time.LocalDateTime; 
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,8 +15,12 @@ import org.springframework.stereotype.Service;
 import com.lti.flipfit.dto.LoginDto;
 import com.lti.flipfit.dto.UserDto;
 import com.lti.flipfit.entity.GymAddress;
+import com.lti.flipfit.entity.GymCustomer;
+import com.lti.flipfit.entity.GymRole;
 import com.lti.flipfit.entity.GymUser;
 import com.lti.flipfit.repository.GymAddressRepository;
+import com.lti.flipfit.repository.GymCustomerRepository;
+import com.lti.flipfit.repository.GymRoleRepository;
 import com.lti.flipfit.repository.GymUserRepository;
 import com.lti.flipfit.response.ApiResponse;
 
@@ -45,16 +53,30 @@ import jakarta.validation.*;
 public class UserServiceImpl implements UserService {
 
 
-    @Autowired
-    private GymUserRepository userRepository;
+	@Autowired
+	private final GymUserRepository userRepository;
+	@Autowired
+    private final GymAddressRepository addressRepository;
+	@Autowired
+    private final GymCustomerRepository customerRepository;
+	@Autowired
+    private final PasswordEncoder passwordEncoder;
+	@Autowired
+    private final GymRoleRepository roleRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+
+    // for checking caching is working or not
+    private final AtomicInteger loginExecCount = new AtomicInteger();
+
     
 
-    @Autowired
-    private GymAddressRepository addressRepository;
-
+	public UserServiceImpl(GymUserRepository userRepository, GymAddressRepository addressRepository, GymCustomerRepository customerRepository, GymRoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+	        this.userRepository = userRepository;
+	        this.addressRepository = addressRepository;
+	        this.customerRepository = customerRepository;
+	        this.passwordEncoder = passwordEncoder;
+	        this.roleRepository = roleRepository;
+	    }
 
 
 /*
@@ -86,93 +108,89 @@ public class UserServiceImpl implements UserService {
 
 	@Override
     @Transactional
-	public ResponseEntity<ApiResponse> register(UserDto userDto) {
-	    // Check username uniqueness
 
-		if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
-		        ApiResponse response = new ApiResponse("FAILURE", "Username already exists", null);
-		        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-		    }
+    public ResponseEntity<ApiResponse> register(UserDto userDto) {
+        // Validate username uniqueness
+        if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("FAILURE", "Username already exists", null));
+        }
 
-	
-	    // Validate password length
-	    if (userDto.getPassword() == null || userDto.getPassword().length() < 6) {
-	        return ResponseEntity.badRequest()
-	                .body(new ApiResponse("FAILURE", "Password must be at least 6 characters", null));
-	    }
-	
-	    // Validate role
-	    if (userDto.getRoleid() == null) {
-	        return ResponseEntity.badRequest()
-	                .body(new ApiResponse("FAILURE", "Role is required", null));
-	    }
-	    
-	 // Validate center
-	    if (userDto.getCenterid() == null) {
-	        return ResponseEntity.badRequest()
-	                .body(new ApiResponse("FAILURE", "Center is required for which you're applying", null));
-	    }
-	    
-	    
-	 // Validate email
-	    if (userDto.getEmail() == null) {
-	        return ResponseEntity.badRequest()
-	                .body(new ApiResponse("FAILURE", "Email is required", null));
-	    }
-		    
-		    
-	 // Validate mobile
-	    if (userDto.getMobile() == null) {
-	        return ResponseEntity.badRequest()
-	                .body(new ApiResponse("FAILURE", "Mobile is required", null));
-	    } 
-	
+        // Validate password length
+        if (userDto.getPassword() == null || userDto.getPassword().length() < 6) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse("FAILURE", "Password must be at least 6 characters", null));
+        }
 
+        // Validate role
+        if (userDto.getRoleid() == null) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse("FAILURE", "Role is required", null));
+        }
 
+        // Validate email & mobile (now belong to customer)
+        if (userDto.getEmail() == null) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse("FAILURE", "Email is required", null));
+        }
+        if (userDto.getMobile() == null) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse("FAILURE", "Mobile is required", null));
+        }
 
-        // (Optional) Validate essential address fields
-		/*
-		 * if (isBlank(userDto.getLine1()) || isBlank(userDto.getCity()) ||
-		 * isBlank(userDto.getPostalCode())) { return ResponseEntity.badRequest()
-		 * .body(new ApiResponse("FAILURE",
-		 * "Address line1, city, and postalCode are required", null)); }
-		 */
-	    System.out.println(userDto.getLine1()+"###################"+userDto.getCity()+"#####################"+ userDto.getPostalcode() );
+        // Validate address fields for customer
+        if (userDto.getLine1() == null || userDto.getCity() == null || userDto.getPostalcode() == null) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse("FAILURE", "Address (line1, city, postal code) is required", null));
+        }
 
-        // 1) Create & save GymAddress
+        // 1) Create & save GymAddress (for customer)
         GymAddress address = new GymAddress();
         address.setLine1(userDto.getLine1());
         address.setLine2(userDto.getLine2());
         address.setCity(userDto.getCity());
         address.setState(userDto.getState());
-        address.setPostalCode(userDto.getPostalcode());
+        address.setPostalcode(userDto.getPostalcode());
         address.setCountry(userDto.getCountry());
 
         GymAddress savedAddress = addressRepository.save(address);
 
-        // 2) Create GymUser entity with FK to saved address
+        // 2) Create minimal GymUser (no email/mobile/address here)
         GymUser gymUser = new GymUser();
         gymUser.setUsername(userDto.getUsername());
         gymUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
         gymUser.setRoleid(userDto.getRoleid());
-        gymUser.setCenterid(userDto.getCenterid());
+        gymUser.setStatus("PENDING"); // or "ACTIVE" per your flow
         gymUser.setCreatedAt(LocalDateTime.now());
-        gymUser.setEmail(userDto.getEmail());
-        gymUser.setMobile(userDto.getMobile());
-        gymUser.setUserstatus("PENDING");
-        gymUser.setAddress(savedAddress);
 
-        // Link address
-        gymUser.setAddress(savedAddress);
-
-        // Save user
         GymUser savedUser = userRepository.save(gymUser);
+        // 3) Create GymCustomer linked to user & address
+        GymCustomer customer = new GymCustomer();
+        customer.setFirstname(userDto.getFirstname());        // add to DTO if not present
+        customer.setLastname(userDto.getLastname());          // add to DTO if not present
+        customer.setEmail(userDto.getEmail());
+        customer.setMobile(userDto.getMobile());                             
+        customer.setAddress(savedAddress);
+        customer.setCreatedAt(LocalDateTime.now());
+        customer.setUpdatedAt(LocalDateTime.now());
+        customer.setCenterid(userDto.getCenterid()); 
+        customer.setUser(savedUser);
 
-	
-	    // Return success response
-	    ApiResponse response = new ApiResponse("SUCCESS", "User registered successfully", savedUser);
-	    return ResponseEntity.status(HttpStatus.CREATED).body(response);
-	}
+        GymCustomer savedCustomer = customerRepository.save(customer);
+        
+        GymRole customerRoleData = roleRepository.findById(savedUser.getRoleid())
+	            .orElseThrow(() -> new RuntimeException("Role is not found"));
+
+        // 4) Response (return both or just IDs)
+        var payload = Map.of(
+            "userId", savedUser.getId(),
+            "customerId", savedCustomer.getId()
+        );
+        
+        ApiResponse response = new ApiResponse("SUCCESS", savedCustomer.getFirstname() + " registered successfully as "+customerRoleData.getRolename(), payload);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
 
 
 
@@ -204,30 +222,38 @@ public class UserServiceImpl implements UserService {
      */
 
 		@Override
+		@Cacheable(value = "userCache", key = "#loginDto.username")
 		public ResponseEntity<ApiResponse> login(LoginDto loginDto) {
+			
 		    // Validate username existence
-		    GymUser gymUser = userRepository.findByUsernameAndUserstatus(loginDto.getUsername(), "ACTIVE")
+			GymCustomer gymCustomer = customerRepository.findCustomerWithUserAndAddress(loginDto.getUsername(), "ACTIVE")
 		            .orElseThrow(() -> new RuntimeException("User not found or Pending/Inactive"));
-		
+
+			//GymUser customer = gymUser.;
+			
+					
+			//checking caching is working on not
+		    System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++");
+		    System.out.println("login executed count = " + loginExecCount.incrementAndGet());
+		    
 		    // Validate password
-		    if (!passwordEncoder.matches(loginDto.getPassword(), gymUser.getPassword())) {
+		    if (!passwordEncoder.matches(loginDto.getPassword(), gymCustomer.getUser().getPassword())) {
 		        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
 		                .body(new ApiResponse("FAILURE", "Invalid credentials", null));
 		    }
 		
-		
-		    // Return success response with token
-		    ApiResponse response = new ApiResponse("SUCCESS", "Login successful", gymUser);
-		    return ResponseEntity.ok(response);
+		    var payload = Map.of(
+		            "userFirstName", gymCustomer.getFirstname(),
+		            "userLastName", gymCustomer.getLastname(),
+		            "userMobile", gymCustomer.getMobile(),
+		            "userEmail", gymCustomer.getEmail(),
+		            "userAddressDetail", gymCustomer.getAddress()
+		        );
+		    // Return success response
+		    ApiResponse response = new ApiResponse("SUCCESS", "Login successful", payload);
+		    return ResponseEntity.status(HttpStatus.OK).body(response);
 		}
 		
-		
-
-		private boolean isBlank(String s) {
-		    return s == null || s.trim().isEmpty();
-		}
-
-
 
 
 

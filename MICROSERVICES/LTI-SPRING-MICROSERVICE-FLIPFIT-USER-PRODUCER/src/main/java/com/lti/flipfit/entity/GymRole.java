@@ -24,9 +24,38 @@ import lombok.NoArgsConstructor;
 @Table(name = "gymrole")
 public class GymRole {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer roleid;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long roleid;
+    
     private String rolename;
+    
     private String description;
+
+	public Long getRoleid() {
+		return roleid;
+	}
+
+	public void setRoleid(Long roleid) {
+		this.roleid = roleid;
+	}
+
+	public String getRolename() {
+		return rolename;
+	}
+
+	public void setRolename(String rolename) {
+		this.rolename = rolename;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+    
+    
+    
 }
 
