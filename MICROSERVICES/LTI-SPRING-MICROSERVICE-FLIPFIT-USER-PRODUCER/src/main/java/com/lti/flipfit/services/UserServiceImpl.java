@@ -1,6 +1,6 @@
 package com.lti.flipfit.services;
 
-import java.time.LocalDateTime; 
+import java.time.LocalDateTime;  
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -12,14 +12,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.lti.flipfit.constants.ConstantLists;
 import com.lti.flipfit.dto.LoginDto;
 import com.lti.flipfit.dto.UserDto;
 import com.lti.flipfit.entity.GymAddress;
+import com.lti.flipfit.entity.GymAdmin;
 import com.lti.flipfit.entity.GymCustomer;
+import com.lti.flipfit.entity.GymOwner;
 import com.lti.flipfit.entity.GymRole;
 import com.lti.flipfit.entity.GymUser;
 import com.lti.flipfit.repository.GymAddressRepository;
+import com.lti.flipfit.repository.GymAdminRepository;
 import com.lti.flipfit.repository.GymCustomerRepository;
+import com.lti.flipfit.repository.GymOwnerRepository;
 import com.lti.flipfit.repository.GymRoleRepository;
 import com.lti.flipfit.repository.GymUserRepository;
 import com.lti.flipfit.response.ApiResponse;
@@ -55,6 +60,13 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private final GymUserRepository userRepository;
+
+	@Autowired
+	private final GymAdminRepository adminRepository;
+
+	@Autowired
+	private final GymOwnerRepository ownerRepository;
+	
 	@Autowired
     private final GymAddressRepository addressRepository;
 	@Autowired
@@ -70,10 +82,12 @@ public class UserServiceImpl implements UserService {
 
     
 
-	public UserServiceImpl(GymUserRepository userRepository, GymAddressRepository addressRepository, GymCustomerRepository customerRepository, GymRoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+	public UserServiceImpl(GymUserRepository userRepository, GymAddressRepository addressRepository, GymCustomerRepository customerRepository, GymRoleRepository roleRepository,GymAdminRepository adminRepository,GymOwnerRepository ownerRepository,  PasswordEncoder passwordEncoder) {
 	        this.userRepository = userRepository;
 	        this.addressRepository = addressRepository;
 	        this.customerRepository = customerRepository;
+	        this.adminRepository = adminRepository;
+	        this.ownerRepository = ownerRepository;
 	        this.passwordEncoder = passwordEncoder;
 	        this.roleRepository = roleRepository;
 	    }
@@ -108,88 +122,58 @@ public class UserServiceImpl implements UserService {
 
 	@Override
     @Transactional
-
     public ResponseEntity<ApiResponse> register(UserDto userDto) {
-        // Validate username uniqueness
+
+        // 0) Validation (fast-fail)
+        Optional<String> validationError = validateRegisterInput(userDto);
+        if (validationError.isPresent()) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse("FAILURE", validationError.get(), null));
+        }
+
+        // Check username uniqueness
         if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ApiResponse("FAILURE", "Username already exists", null));
         }
-
-        // Validate password length
-        if (userDto.getPassword() == null || userDto.getPassword().length() < 6) {
-            return ResponseEntity.badRequest()
-                    .body(new ApiResponse("FAILURE", "Password must be at least 6 characters", null));
-        }
-
-        // Validate role
-        if (userDto.getRoleid() == null) {
-            return ResponseEntity.badRequest()
-                    .body(new ApiResponse("FAILURE", "Role is required", null));
-        }
-
-        // Validate email & mobile (now belong to customer)
-        if (userDto.getEmail() == null) {
-            return ResponseEntity.badRequest()
-                    .body(new ApiResponse("FAILURE", "Email is required", null));
-        }
-        if (userDto.getMobile() == null) {
-            return ResponseEntity.badRequest()
-                    .body(new ApiResponse("FAILURE", "Mobile is required", null));
-        }
-
-        // Validate address fields for customer
-        if (userDto.getLine1() == null || userDto.getCity() == null || userDto.getPostalcode() == null) {
-            return ResponseEntity.badRequest()
-                    .body(new ApiResponse("FAILURE", "Address (line1, city, postal code) is required", null));
-        }
-
-        // 1) Create & save GymAddress (for customer)
-        GymAddress address = new GymAddress();
-        address.setLine1(userDto.getLine1());
-        address.setLine2(userDto.getLine2());
-        address.setCity(userDto.getCity());
-        address.setState(userDto.getState());
-        address.setPostalcode(userDto.getPostalcode());
-        address.setCountry(userDto.getCountry());
-
-        GymAddress savedAddress = addressRepository.save(address);
-
-        // 2) Create minimal GymUser (no email/mobile/address here)
-        GymUser gymUser = new GymUser();
-        gymUser.setUsername(userDto.getUsername());
-        gymUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        gymUser.setRoleid(userDto.getRoleid());
-        gymUser.setStatus("PENDING"); // or "ACTIVE" per your flow
-        gymUser.setCreatedAt(LocalDateTime.now());
-
-        GymUser savedUser = userRepository.save(gymUser);
-        // 3) Create GymCustomer linked to user & address
-        GymCustomer customer = new GymCustomer();
-        customer.setFirstname(userDto.getFirstname());        // add to DTO if not present
-        customer.setLastname(userDto.getLastname());          // add to DTO if not present
-        customer.setEmail(userDto.getEmail());
-        customer.setMobile(userDto.getMobile());                             
-        customer.setAddress(savedAddress);
-        customer.setCreatedAt(LocalDateTime.now());
-        customer.setUpdatedAt(LocalDateTime.now());
-        customer.setCenterid(userDto.getCenterid()); 
-        customer.setUser(savedUser);
-
-        GymCustomer savedCustomer = customerRepository.save(customer);
         
-        GymRole customerRoleData = roleRepository.findById(savedUser.getRoleid())
-	            .orElseThrow(() -> new RuntimeException("Role is not found"));
+        // Fetch role to enrich response message
+        GymRole customerRoleData = roleRepository.findById(userDto.getRoleid())
+                .orElseThrow(() -> new RuntimeException("Role is not found"));
 
-        // 4) Response (return both or just IDs)
-        var payload = Map.of(
-            "userId", savedUser.getId(),
-            "customerId", savedCustomer.getId()
+        // 1) Save address
+        GymAddress savedAddress = saveAddress(userDto);
+
+        // 2) Save user (minimal fields)
+        GymUser savedUser = saveUser(userDto);
+
+        
+        // 3) Save customer, owner and admin  linking user + address
+        
+        
+       if(ConstantLists.OWNER_ROLE_ID.equals(savedUser.getRoleid())  ) {
+    	   GymOwner savedOwner = saveOwner(userDto, savedUser, savedAddress);
+       }else if (ConstantLists.ADMIN_ROLE_ID.equals(savedUser.getRoleid()) ) {
+    	   GymAdmin savedAdmin = saveAdmin(userDto, savedUser, savedAddress);
+		}else if (ConstantLists.CUSTOMER_ROLE_ID.equals(savedUser.getRoleid()) ) {
+	       GymCustomer savedCustomer = saveCustomer(userDto, savedUser, savedAddress);
+		}
+
+
+
+        Map<String, Object> payload = Map.of(
+                "userId", savedUser.getId()
         );
-        
-        ApiResponse response = new ApiResponse("SUCCESS", savedCustomer.getFirstname() + " registered successfully as "+customerRoleData.getRolename(), payload);
+
+        ApiResponse response = new ApiResponse(
+                "SUCCESS",
+                "Registered successfully as " + customerRoleData.getRolename(),
+                payload
+        );
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
 
 
 
@@ -220,6 +204,9 @@ public class UserServiceImpl implements UserService {
      * @see GymUserRepository#findByUsername(String)
      * @see PasswordEncoder#matches(CharSequence, String)
      */
+
+		
+
 
 		@Override
 		@Cacheable(value = "userCache", key = "#loginDto.username")
@@ -255,7 +242,119 @@ public class UserServiceImpl implements UserService {
 		}
 		
 
+	    // -----------------------------
+	    // Validation
+	    // -----------------------------
+	    private Optional<String> validateRegisterInput(UserDto dto) {
+	        if (dto.getUsername() == null || dto.getUsername().isBlank()) {
+	            return Optional.of("Username is required");
+	        }
+	        if (dto.getPassword() == null || dto.getPassword().length() < 6) {
+	            return Optional.of("Password must be at least 6 characters");
+	        }
+	        if (dto.getRoleid() == null) {
+	            return Optional.of("Role is required");
+	        }
+	        if (dto.getEmail() == null) {
+	            return Optional.of("Email is required");
+	        }
+	        if (dto.getMobile() == null) {
+	            return Optional.of("Mobile is required");
+	        }
+	        if (dto.getLine1() == null || dto.getLine1().isBlank()
+	                || dto.getCity() == null || dto.getCity().isBlank()
+	                || dto.getPostalcode() == null || dto.getPostalcode().isBlank()) {
+	            return Optional.of("Address (line1, city, postal code) is required");
+	        }
+	        return Optional.empty();
+	    }
+	    
+	    
 
+
+
+	    // -----------------------------
+	    //  Helper methods
+	    // -----------------------------
+
+	    /**
+	     * Persists a GymAddress derived from the UserDto.
+	     */
+	    private GymAddress saveAddress(UserDto dto) {
+	        GymAddress address = new GymAddress();
+	        address.setLine1(dto.getLine1());
+	        address.setLine2(dto.getLine2());
+	        address.setCity(dto.getCity());
+	        address.setState(dto.getState());
+	        address.setPostalcode(dto.getPostalcode());
+	        address.setCountry(dto.getCountry());
+	        return addressRepository.save(address);
+	    }
+
+	    /**
+	     * Persists a GymUser (minimal user record; no email/mobile/address).
+	     */
+	    private GymUser saveUser(UserDto dto) {
+	        GymUser gymUser = new GymUser();
+	        gymUser.setUsername(dto.getUsername());
+	        gymUser.setPassword(passwordEncoder.encode(dto.getPassword()));
+	        gymUser.setRoleid(dto.getRoleid());
+	        gymUser.setStatus("PENDING"); // or "ACTIVE" based on your flow
+	        gymUser.setCreatedAt(LocalDateTime.now());
+	        return userRepository.save(gymUser);
+	    }
+
+	    /**
+	     * Persists a GymCustomer linked to a GymUser and GymAddress.
+	     */
+	    private GymCustomer saveCustomer(UserDto dto, GymUser user, GymAddress address) {
+	        GymCustomer customer = new GymCustomer();
+	        customer.setFirstname(dto.getFirstname());
+	        customer.setLastname(dto.getLastname());
+	        customer.setEmail(dto.getEmail());
+	        customer.setMobile(dto.getMobile());
+	        customer.setAddress(address);
+	        customer.setCreatedAt(LocalDateTime.now());
+	        customer.setUpdatedAt(LocalDateTime.now());
+	        customer.setCenterid(dto.getCenterid());
+	        customer.setUser(user);
+	        return customerRepository.save(customer);
+	    }
+	    
+	    
+	    /**
+	     * Persists a GymOwner linked to a GymUser and GymAddress. 
+	     */
+	    private GymOwner saveOwner(UserDto userDto, GymUser savedUser, GymAddress savedAddress) {
+	    	GymOwner owner = new GymOwner();
+	        owner.setFirstname(userDto.getFirstname());
+	        owner.setLastname(userDto.getLastname());
+	        owner.setEmail(userDto.getEmail());
+	        owner.setMobile(userDto.getMobile());
+	        owner.setAddress(savedAddress);
+	        owner.setCreatedAt(LocalDateTime.now());
+	        owner.setUpdatedAt(LocalDateTime.now());
+	        owner.setCenterid(userDto.getCenterid());
+	        owner.setUser(savedUser);
+	        return ownerRepository.save(owner);
+		}
+	    
+	    /**
+	     * Persists a GymAdmin linked to a GymUser and GymAddress.
+	     */
+	    private GymAdmin saveAdmin(UserDto userDto, GymUser savedUser, GymAddress savedAddress) {
+	    	GymAdmin admin = new GymAdmin();
+	        admin.setFirstname(userDto.getFirstname());
+	        admin.setLastname(userDto.getLastname());
+	        admin.setEmail(userDto.getEmail());
+	        admin.setMobile(userDto.getMobile());
+	        admin.setAddress(savedAddress);
+	        admin.setCreatedAt(LocalDateTime.now());
+	        admin.setUpdatedAt(LocalDateTime.now());
+	        admin.setCenterid(userDto.getCenterid());
+	        admin.setUser(savedUser);
+	        return adminRepository.save(admin);
+		}
 
 
 }
