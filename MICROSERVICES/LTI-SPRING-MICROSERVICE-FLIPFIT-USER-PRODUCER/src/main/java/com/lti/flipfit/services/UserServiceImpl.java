@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -215,9 +216,7 @@ public class UserServiceImpl implements UserService {
 		    // Validate username existence
 			GymCustomer gymCustomer = customerRepository.findCustomerWithUserAndAddress(loginDto.getUsername(), "ACTIVE")
 		            .orElseThrow(() -> new RuntimeException("User not found or Pending/Inactive"));
-
-			//GymUser customer = gymUser.;
-			
+	
 					
 			//checking caching is working on not
 		    System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++");
@@ -354,6 +353,16 @@ public class UserServiceImpl implements UserService {
 	        admin.setCenterid(userDto.getCenterid());
 	        admin.setUser(savedUser);
 	        return adminRepository.save(admin);
+		}
+
+
+		@Override
+		public GymUser getUserByUserName(String username) {
+			// TODO Auto-generated method stub
+			GymUser userData = userRepository.findByUsername(username)
+						.orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+			return userData;
+
 		}
 
 
