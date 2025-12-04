@@ -26,6 +26,12 @@ public interface GymCustomerRepository extends JpaRepository<GymCustomer, Long> 
                                                          @Param("status") String status);
 
 
-	
+
+
+	@Query(JpqlGymUser.FIND_CUSTOMER_BY_USER_ID_AND_STATUS_WITH_ADDRESS)
+	Optional<GymCustomer> findByUserIdAndStatusWithAddress(@Param("userId") Long userId,
+	                                                       @Param("status") String status);
+
+
 }
 

@@ -1,6 +1,6 @@
 package com.lti.flipfit.beans;
 
-import com.lti.flipfit.entity.GymUser; 
+import com.lti.flipfit.entity.GymUser;  
 import com.lti.flipfit.repository.GymUserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,6 +1,6 @@
 package com.lti.flipfit.rest;
 
-import java.util.List;
+import java.util.List; 
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lti.flipfit.services.*;
 import com.lti.flipfit.utils.RoleUtils;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 import com.lti.flipfit.dto.LoginDto;
 import com.lti.flipfit.dto.UserDto;
 import com.lti.flipfit.entity.GymUser;
-import com.lti.flipfit.response.ApiResponse;
+import com.lti.flipfit.response.RestApiResponse;
 import com.lti.flipfit.security.JwtService;
 
 /*
@@ -39,6 +43,7 @@ import com.lti.flipfit.security.JwtService;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "Authentication", description = "Endpoints for user login and JWT")
 public class GymFlipFitUserController {
 
 	@Autowired
@@ -76,7 +81,7 @@ public class GymFlipFitUserController {
 	 */
 
 	@PostMapping("/register")
-	public ResponseEntity<ApiResponse> register(@RequestBody @Valid UserDto userDto) {
+	public ResponseEntity<RestApiResponse> register(@RequestBody @Valid UserDto userDto) {
 		return userService.register(userDto);
 	}
 
@@ -97,8 +102,15 @@ public class GymFlipFitUserController {
 	 * @see UserService#login(LoginDto)
 	 */
 
+	@Operation(summary = "Login user", description = "Authenticate user and return JWT token")
+	    @ApiResponses({
+	        @ApiResponse(responseCode = "200", description = "Login successful"),
+	        @ApiResponse(responseCode = "401", description = "Invalid credentials")
+	    })
+	
+
 	@PostMapping("/login")
-	public ResponseEntity<ApiResponse> login(@RequestBody @Valid LoginDto loginDto) {
+	public ResponseEntity<RestApiResponse> login(@RequestBody @Valid LoginDto loginDto) {
 
 		authManager
 				.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
@@ -114,9 +126,9 @@ public class GymFlipFitUserController {
 
 		String token = jwtService.generateToken(userData, extraClaims);
 
-		Map<String, Object> payload = Map.of("token", token, "userName", userData.getUsername());
+		Map<String, Object> payload = Map.of("token", token, "userName", userData.getUsername(), "userId", userData.getId());
 
-		ApiResponse response = new ApiResponse("SUCCESS", "Login successfully !", payload);
+		RestApiResponse response = new RestApiResponse("SUCCESS", "Login successfully !", payload);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}

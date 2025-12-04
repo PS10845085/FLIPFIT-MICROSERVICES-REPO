@@ -28,7 +28,7 @@ import com.lti.flipfit.repository.GymCustomerRepository;
 import com.lti.flipfit.repository.GymOwnerRepository;
 import com.lti.flipfit.repository.GymRoleRepository;
 import com.lti.flipfit.repository.GymUserRepository;
-import com.lti.flipfit.response.ApiResponse;
+import com.lti.flipfit.response.RestApiResponse;
 
 import jakarta.transaction.Transactional;
 
@@ -123,19 +123,19 @@ public class UserServiceImpl implements UserService {
 
 	@Override
     @Transactional
-    public ResponseEntity<ApiResponse> register(UserDto userDto) {
+    public ResponseEntity<RestApiResponse> register(UserDto userDto) {
 
         // 0) Validation (fast-fail)
         Optional<String> validationError = validateRegisterInput(userDto);
         if (validationError.isPresent()) {
             return ResponseEntity.badRequest()
-                    .body(new ApiResponse("FAILURE", validationError.get(), null));
+                    .body(new RestApiResponse("FAILURE", validationError.get(), null));
         }
 
         // Check username uniqueness
         if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponse("FAILURE", "Username already exists", null));
+                    .body(new RestApiResponse("FAILURE", "Username already exists", null));
         }
         
         // Fetch role to enrich response message
@@ -166,7 +166,7 @@ public class UserServiceImpl implements UserService {
                 "userId", savedUser.getId()
         );
 
-        ApiResponse response = new ApiResponse(
+        RestApiResponse response = new RestApiResponse(
                 "SUCCESS",
                 "Registered successfully as " + customerRoleData.getRolename(),
                 payload
@@ -211,7 +211,7 @@ public class UserServiceImpl implements UserService {
 
 		@Override
 		@Cacheable(value = "userCache", key = "#loginDto.username")
-		public ResponseEntity<ApiResponse> login(LoginDto loginDto) {
+		public ResponseEntity<RestApiResponse> login(LoginDto loginDto) {
 			
 		    // Validate username existence
 			GymCustomer gymCustomer = customerRepository.findCustomerWithUserAndAddress(loginDto.getUsername(), "ACTIVE")
@@ -225,7 +225,7 @@ public class UserServiceImpl implements UserService {
 		    // Validate password
 		    if (!passwordEncoder.matches(loginDto.getPassword(), gymCustomer.getUser().getPassword())) {
 		        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-		                .body(new ApiResponse("FAILURE", "Invalid credentials", null));
+		                .body(new RestApiResponse("FAILURE", "Invalid credentials", null));
 		    }
 		
 		    var payload = Map.of(
@@ -236,7 +236,7 @@ public class UserServiceImpl implements UserService {
 		            "userAddressDetail", gymCustomer.getAddress()
 		        );
 		    // Return success response
-		    ApiResponse response = new ApiResponse("SUCCESS", "Login successful", payload);
+		    RestApiResponse response = new RestApiResponse("SUCCESS", "Login successful", payload);
 		    return ResponseEntity.status(HttpStatus.OK).body(response);
 		}
 		

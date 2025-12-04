@@ -15,6 +15,17 @@ public final class JpqlGymUser {
 	        WHERE u.username = :username
 	          AND u.status = :status
 	      """;
+
+ public static final String FIND_CUSTOMER_BY_USER_ID_AND_STATUS_WITH_ADDRESS = 
+		 """
+		    SELECT c
+		    FROM GymCustomer c
+		    JOIN FETCH c.user u
+		    LEFT JOIN FETCH c.address a
+		    WHERE u.id = :userId
+		      AND u.status = :status
+		""";
+
  
  public static final String FIND_BY_USERNAME =
          "SELECT g FROM GymUser g " +

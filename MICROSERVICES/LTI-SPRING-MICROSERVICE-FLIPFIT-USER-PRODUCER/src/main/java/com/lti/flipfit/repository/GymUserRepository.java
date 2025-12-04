@@ -28,6 +28,8 @@ public interface GymUserRepository extends JpaRepository<GymUser, Long> {
     @Query(JpqlGymUser.FIND_CUSTOMER_DETAIL_BY_USERNAME_AND_STATUS)
     Optional<GymUser> findDetailedByUserUsernameAndStatus(@Param("username") String username,
                                                               @Param("status") String status);
+	
+	
 
 }
 
