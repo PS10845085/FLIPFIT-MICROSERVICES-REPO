@@ -4,7 +4,6 @@ import { BrowserModule, provideClientHydration, withEventReplay } from '@angular
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { LoginComponent } from './components/login-component/login-component';
-import { RegisterComponent } from './components/register-component/register-component';
 
 
 // Angular Material (optional - include only what you use)
@@ -24,13 +23,16 @@ import { MatOptionModule } from '@angular/material/core';
 // Forms
 import { ReactiveFormsModule } from '@angular/forms'
 
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
+import { authInterceptor} from './interceptors/auth.interceptor';
+import { DashboardComponent } from './components/dashboard-component/dashboard-component';
 
 @NgModule({
   declarations: [
     App,
     LoginComponent,
-    RegisterComponent
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +58,8 @@ import { ReactiveFormsModule } from '@angular/forms'
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideClientHydration(withEventReplay())
+    provideClientHydration(withEventReplay()),
+    provideHttpClient(withInterceptors([authInterceptor]))
   ],
   bootstrap: [App]
 })

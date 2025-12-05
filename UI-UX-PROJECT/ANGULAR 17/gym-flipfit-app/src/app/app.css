@@ -4,14 +4,21 @@ mat-card {
   text-align: center;
 }
 
+
+mat-toolbar{
+  max-width: 100%;
+}
 mat-form-field {
   display: block;
 }
 
-right-aligned {
-  float: right;
+mat-toolbar div .right-aligned-menu {
+  max-width: 50% !important;
+  text-align: right !important;
 }
 
-left-aligned {
-  float: left;
+mat-toolbar div .left-aligned-menu {
+  max-width: 50% !important;
+  text-align: left !important;
+  margin-right: 64% !important;
 }

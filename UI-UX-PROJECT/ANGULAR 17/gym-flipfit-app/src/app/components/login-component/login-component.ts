@@ -1,38 +1,36 @@
-import { Component } from '@angular/core';
 
+// src/app/login-component/login.ts
+import { Component } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import {AuthService} from '../../services/auth.service'
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login-component',
+  // non-standalone component: do NOT put `imports` here
   standalone: false,
   templateUrl: './login-component.html',
-  styleUrl: './login-component.css',
+  styleUrls: ['./login-component.css'], // <-- fixed: styleUrls (plural)
 })
 export class LoginComponent {
-
- 
- constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {
-    this.form = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-    });
-  }
-
-
   loading = false;
   error = '';
   success = '';
   submitted = false;
   form!: FormGroup;
 
-  
+  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {
+    this.form = this.fb.group({
+      username: ['', [Validators.required, Validators.minLength(2)]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+    });
+    console.log('[LoginComponent] constructor initialized');
+  }
 
-  get emailError(): string {
-    const c = this.form.controls['email'];
-    if (c.hasError('required')) return 'Email is required';
-    if (c.hasError('email')) return 'Enter a valid email';
+  get usernameError(): string {
+    const c = this.form.controls['username'];
+    if (c.hasError('required')) return 'Username is required';
+    if (c.hasError('minlength')) return 'Username must be at least 2 characters';
     return '';
   }
 
@@ -43,27 +41,42 @@ export class LoginComponent {
     return '';
   }
 
+  
   onSubmit(): void {
+    console.log('[LoginComponent] onSubmit fired');
     this.submitted = true;
     this.error = '';
     this.success = '';
 
-    if (this.form.invalid) return;
+    this.form.markAllAsTouched();
+    if (this.form.invalid) {
+      console.log('[LoginComponent] form invalid', this.form.value);
+      return;
+    }
 
     this.loading = true;
-    const { email, password } = this.form.value;
+    const { username, password } = this.form.value;
 
-    this.auth.login({ email: email!, password: password! }).subscribe({
-      next: res => {
+    this.auth.login({ username: username!, password: password! }).subscribe({
+      next: result => {
         this.loading = false;
-        this.success = res.message;
-        // Navigate to a protected page (add route later)
-        // this.router.navigateByUrl('/dashboard');
+        if (result.ok) {
+          this.success = result.message;
+          console.log('[LoginComponent] login success', result);
+          // Redirect to a protected route
+           this.router.navigateByUrl('/dashboard');
+        } else {
+          this.error = result.message;
+          console.warn('[LoginComponent] login failed (API ERROR)', result);
+        }
       },
       error: err => {
         this.loading = false;
         this.error = err.message ?? 'Login failed';
+        console.error('[LoginComponent] login error (HTTP/Network)', err);
       }
     });
   }
+
+
 }

@@ -2,20 +2,20 @@
 <mat-card>
 <mat-card-content>
 <mat-toolbar color="primary" fxLayout="row" fxLayoutAlign="space-between center">
-  <div class="left-aligned">
+  <div class="left-aligned-menu">
   <span>
     <button mat-button routerLink="/">{{title()}}</button>
     <button mat-button routerLinkActive="active" routerLink="/"><mat-icon>home</mat-icon></button>
   </span>
   </div>
   
-  <div class="right-aligned" fxLayout="row" fxShow="false" fxShow.gt-sm>
+  <div  class="right-aligned-menu" fxLayout="row" fxShow="false" fxShow.gt-sm>
     <button mat-button  routerLinkActive="active" routerLink="/login" >
       <mat-icon>login</mat-icon>
       Login
     </button>
     <button mat-button routerLinkActive="active" routerLink="/register">
-      <mat-icon>app_registration</mat-icon>
+      <mat-icon>person_add</mat-icon>
       Register
     </button>
     
