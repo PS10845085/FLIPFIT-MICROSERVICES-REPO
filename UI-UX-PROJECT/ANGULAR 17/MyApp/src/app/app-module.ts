@@ -3,16 +3,16 @@ import { BrowserModule, provideClientHydration, withEventReplay } from '@angular
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
-import { Login } from './components/login/login';
+import { LoginComponent } from './components/login/login';
 
 @NgModule({
   declarations: [
-    App,
-    Login
+    App
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    LoginComponent
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
