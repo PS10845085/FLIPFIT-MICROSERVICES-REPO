@@ -1,0 +1,46 @@
+
+<!-- src/app/register-component/register-component.component.html -->
+<h2>Register</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="form">
+  <label>
+    Name
+    <input type="text" formControlName="name" placeholder="Your name" />
+  </label>
+  <div class="error" *ngIf="submitted && form.controls.name.invalid">
+    {{ nameError }}
+  </div>
+
+  <label>
+    Email
+    <input type="email" formControlName="email" placeholder="you@example.com" />
+  </label>
+  <div class="error" *ngIf="submitted && form.controls.email.invalid">
+    {{ emailError }}
+  </div>
+
+  <label>
+    Password
+    <input type="password" formControlName="password" placeholder="••••••••" />
+  </label>
+  <div class="error" *ngIf="submitted && form.controls.password.invalid">
+    {{ passwordError }}
+  </div>
+
+  <label>
+    Confirm Password
+    <input type="password" formControlName="confirmPassword" placeholder="••••••••" />
+  </label>
+  <div class="error" *ngIf="(submitted && form.controls.confirmPassword.invalid) || (submitted && form.hasError('passwordMismatch'))">
+    {{ confirmPasswordError }}
+  </div>
+
+  <button type="submit" [disabled]="loading">Create Account</button>
+
+  <div class="error" *ngIf="error">{{ error }}</div>
+  <div class="success" *ngIf="success">{{ success }}</div>
+
+  <p class="note">
+    Already have an account? <a routerLink="/login">Login</a>
+  </p>
+</form>

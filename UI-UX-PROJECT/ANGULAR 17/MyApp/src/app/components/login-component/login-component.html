@@ -1,0 +1,30 @@
+
+<!-- src/app/login-component/login-component.component.html -->
+<h2>Login</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="form">
+  <label>
+    Email
+    <input type="email" formControlName="email" placeholder="you@example.com" />
+  </label>
+  <div class="error" *ngIf="submitted && form.controls['email'].invalid">
+    {{ emailError }}
+  </div>
+
+  <label>
+    Password
+    <input type="password" formControlName="password" placeholder="••••••••" />
+  </label>
+  <div class="error" *ngIf="submitted && form.controls['password'].invalid">
+    {{ passwordError }}
+  </div>
+
+  <button type="submit" [disabled]="loading">Login</button>
+
+  <div class="error" *ngIf="error">{{ error }}</div>
+  <div class="success" *ngIf="success">{{ success }}</div>
+
+  <p class="note">
+    New here? <a routerLink="/register">Create an account</a>
+  </p>
+</form>

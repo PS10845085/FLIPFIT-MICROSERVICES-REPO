@@ -1,0 +1,29 @@
+
+<mat-card>
+<mat-card-content>
+<mat-toolbar color="primary" fxLayout="row" fxLayoutAlign="space-between center">
+  <div class="left-aligned">
+  <span>
+    <button mat-button routerLink="/">{{title()}}</button>
+    <button mat-button routerLinkActive="active" routerLink="/"><mat-icon>home</mat-icon></button>
+  </span>
+  </div>
+  
+  <div class="right-aligned" fxLayout="row" fxShow="false" fxShow.gt-sm>
+    <button mat-button  routerLinkActive="active" routerLink="/login" >
+      <mat-icon>login</mat-icon>
+      Login
+    </button>
+    <button mat-button routerLinkActive="active" routerLink="/register">
+      <mat-icon>app_registration</mat-icon>
+      Register
+    </button>
+    
+  </div>
+</mat-toolbar>
+</mat-card-content>
+</mat-card>
+
+<main class="container">
+  <router-outlet></router-outlet>
+</main>
