@@ -1,6 +1,6 @@
 package com.lti.flipfit.rest;
 
-import java.util.List;
+import java.util.List; 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,16 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lti.flipfit.dto.CreateCenterRequest;
 import com.lti.flipfit.entity.GymFlipFitCenter;
+import com.lti.flipfit.response.RestApiResponse;
 import com.lti.flipfit.service.GymFlipFitCenterService;
+
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(
-  origins = "http://localhost:4200",
-  allowedHeaders = {"Authorization", "Content-Type", "Accept", "Origin", "X-Requested-With"},
-  methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS},
-  allowCredentials = "true"
-)
 
 public class GymFlipFitCenterController {
 
@@ -40,8 +36,12 @@ public class GymFlipFitCenterController {
 	 */
 
 	@RequestMapping(value = "/centers", method = RequestMethod.GET)
-	public List<GymFlipFitCenter> getCenters() {
-		return centerService.findAllCenters();
+	public ResponseEntity<RestApiResponse> getCenters() {
+		List<GymFlipFitCenter> centerList = centerService.findAllCenters();
+		RestApiResponse response = new RestApiResponse("SUCCESS", "Centers fetched successfully !", centerList);
+
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+		
 	}
 
 	@RequestMapping(value = "/centers/{id}", method = RequestMethod.GET)
@@ -50,9 +50,12 @@ public class GymFlipFitCenterController {
 	}
 
 	@RequestMapping(value = "/createCenter", method = RequestMethod.POST)
-	public ResponseEntity<GymFlipFitCenter> createCenter(@RequestBody CreateCenterRequest createCenterRequest) {
+	public ResponseEntity<RestApiResponse> createCenter(@RequestBody CreateCenterRequest createCenterRequest) {
 		GymFlipFitCenter savedCenter = centerService.saveCenter(createCenterRequest);
-		return new ResponseEntity<>(savedCenter, HttpStatus.CREATED);
+		
+		RestApiResponse response = new RestApiResponse("SUCCESS", "Center created successfully !", savedCenter);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 	@RequestMapping(value = "/updateCenter/{id}", method = RequestMethod.PUT)

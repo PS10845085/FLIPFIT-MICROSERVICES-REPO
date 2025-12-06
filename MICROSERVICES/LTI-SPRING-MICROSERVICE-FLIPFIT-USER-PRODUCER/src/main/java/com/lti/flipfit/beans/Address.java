@@ -7,7 +7,7 @@ public class Address {
 	private String line2;
 	private String city;
 	private String state;
-	private String postalcode;
+	private String postalCode;
 	private String country;
 	
 	
@@ -42,10 +42,10 @@ public class Address {
 		this.state = state;
 	}
 	public String getPostalCode() {
-		return postalcode;
+		return postalCode;
 	}
 	public void setPostalCode(String postalcode) {
-		this.postalcode = postalcode;
+		this.postalCode = postalcode;
 	}
 	public String getCountry() {
 		return country;

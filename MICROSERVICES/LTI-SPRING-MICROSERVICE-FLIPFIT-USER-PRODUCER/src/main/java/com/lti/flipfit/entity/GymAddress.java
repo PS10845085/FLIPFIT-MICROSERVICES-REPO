@@ -42,8 +42,7 @@ public class GymAddress {
 	@Column(name = "state")
     private String state;
 	
-	@Column(name = "postalcode")
-    private String postalcode;
+    private String postalCode;
 	
 	@Column(name = "country")
     private String country;
@@ -79,13 +78,13 @@ public class GymAddress {
 		this.state = state;
 	}
 	public String getPostalcode() {
-		return postalcode;
+		return postalCode;
 	}
 	public void setPostalcode(String postalcode) {
-		this.postalcode = postalcode;
+		this.postalCode = postalcode;
 	}
 	public String getCountry() {
-		return country;
+		return country; 
 	}
 	public void setCountry(String country) {
 		this.country = country;

@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lti.flipfit.constant.Status;
 import com.lti.flipfit.dto.CreateCenterRequest;
 import com.lti.flipfit.entity.GymFlipFitAddress;
 import com.lti.flipfit.entity.GymFlipFitCenter;
@@ -23,7 +24,9 @@ public class GymFlipFitCenterServiceImpl implements GymFlipFitCenterService {
 	// Fetch all gym centers
 	@Override
 	public List<GymFlipFitCenter> findAllCenters() {
-		return centerRepository.findAll();
+		
+		List<GymFlipFitCenter> activeCenters = centerRepository.findByStatus(Status.ACTIVE);
+		return activeCenters;
 	}
 
 	// Find a center by ID or throw exception if not found
