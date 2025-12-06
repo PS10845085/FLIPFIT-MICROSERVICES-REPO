@@ -1,0 +1,28 @@
+
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Dashboard</mat-card-title>
+    <mat-card-subtitle>Welcome back</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div *ngIf="user; else notLoggedIn">
+      <p><strong>Username:</strong> {{ user.username }}</p>
+      <p><strong>User ID:</strong> {{ user.userId }}</p>
+
+      <details>
+        <summary>Token (JWT)</summary>
+        <pre style="white-space: pre-wrap; word-break: break-all;">{{ user.token }}</pre>
+      </details>
+
+      <div class="actions">
+        <button mat-stroked-button color="primary" (click)="logout()">Logout</button>
+      </div>
+    </div>
+
+    <ng-template #notLoggedIn>
+      <p>You are not logged in.</p>
+      <a routerLink="/login">Go to Login</a>
+    </ng-template>
+  </mat-card-content>
+</mat-card>
