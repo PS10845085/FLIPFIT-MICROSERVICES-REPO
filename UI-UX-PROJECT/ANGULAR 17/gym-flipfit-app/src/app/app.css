@@ -12,13 +12,10 @@ mat-form-field {
   display: block;
 }
 
-mat-toolbar div .right-aligned-menu {
-  max-width: 50% !important;
-  text-align: right !important;
-}
-
-mat-toolbar div .left-aligned-menu {
-  max-width: 50% !important;
-  text-align: left !important;
-  margin-right: 64% !important;
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    float: right;
+    width: 100%;
 }

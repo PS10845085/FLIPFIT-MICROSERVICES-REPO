@@ -1,12 +1,12 @@
 package com.lti.flipfit.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaRepository; 
 import org.springframework.stereotype.Repository;
 
-import com.lti.flipfit.entity.GymFlipFitAddress;
+import com.lti.flipfit.entity.GymAddress;
 
 
 @Repository
-public interface GymFlipFitAddressRepository extends JpaRepository<GymFlipFitAddress, Long>{
+public interface GymFlipFitAddressRepository extends JpaRepository<GymAddress, Long>{
 
 }

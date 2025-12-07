@@ -1,0 +1,172 @@
+
+<!-- src/app/components/register-component/register-component.html -->
+<div class="register-container">
+  <mat-card>
+    <mat-card-title>Register New User</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <!-- Account Section -->
+        <h3>Account</h3>
+        <div class="grid" formGroupName="account">
+          <mat-form-field appearance="outline">
+            <mat-label>Username</mat-label>
+            <input matInput formControlName="username" />
+            <mat-error *ngIf="form.get('account.username')?.hasError('required')">Username is required</mat-error>
+            <mat-error *ngIf="form.get('account.username')?.hasError('minlength')">Min 3 characters</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" formControlName="password" />
+            <mat-error *ngIf="form.get('account.password')?.hasError('required')">Password is required</mat-error>
+            <mat-error *ngIf="form.get('account.password')?.hasError('minlength')">Min 6 characters</mat-error>
+          </mat-form-field>
+
+
+        <!-- Role ID: DROPDOWN -->
+       
+
+<!-- register-component.html (fixed) -->
+<mat-form-field>
+  <mat-select formControlName="roleid">
+    <mat-option *ngFor="let r of roles" [value]="r.roleId">
+      {{ r.roleName }}
+    </mat-option>
+  </mat-select>
+
+  <mat-error *ngIf="form.get('account.roleid')?.hasError('required')">
+    Role is required
+  </mat-error>
+</mat-form-field>
+
+
+
+
+<!-- Account Section (add after Role) -->
+<mat-form-field appearance="outline">
+  <mat-label>Center</mat-label>
+
+  <mat-select formControlName="centerid">
+    @if (!centersLoading && !centersError) {
+      <mat-option *ngFor="let c of centers" [value]="c.id">
+        {{ c.name }}
+      </mat-option>
+    } @else if (centersLoading) {
+      <mat-option disabled>Loading centers…</mat-option>
+    } @else {
+      <mat-option disabled>Error loading centers</mat-option>
+    }
+  </mat-select>
+
+  <mat-error *ngIf="form.get('account.centerid')?.hasError('required')">
+    Center is required
+  </mat-error>
+</mat-form-field>
+
+
+          <!-- Status field removed -->
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Profile Section -->
+        <h3>Profile</h3>
+        <div class="grid" formGroupName="profile">
+          <mat-form-field appearance="outline">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstname" />
+            <mat-error *ngIf="form.get('profile.firstname')?.hasError('required')">First name is required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastname" />
+            <mat-error *ngIf="form.get('profile.lastname')?.hasError('required')">Last name is required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email" />
+            <mat-error *ngIf="form.get('profile.email')?.hasError('required')">Email is required</mat-error>
+            <mat-error *ngIf="form.get('profile.email')?.hasError('email')">Invalid email</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Mobile</mat-label>
+            <input matInput type="tel" formControlName="mobile" />
+            <mat-hint>Digits only</mat-hint>
+            <mat-error *ngIf="form.get('profile.mobile')?.hasError('required')">Mobile is required</mat-error>
+            <mat-error *ngIf="form.get('profile.mobile')?.hasError('pattern')">Enter 10-15 digits</mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Address Section -->
+        <h3>Address</h3>
+        <div class="grid" formGroupName="address">
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Address Line 1</mat-label>
+            <input matInput formControlName="line1" />
+            <mat-error *ngIf="form.get('address.line1')?.hasError('required')">Address Line 1 is required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Address Line 2 (Optional)</mat-label>
+            <input matInput formControlName="line2" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>City</mat-label>
+            <input matInput formControlName="city" />
+            <mat-error *ngIf="form.get('address.city')?.hasError('required')">City is required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>State</mat-label>
+            <input matInput formControlName="state" />
+            <mat-error *ngIf="form.get('address.state')?.hasError('required')">State is required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Postal Code</mat-label>
+            <input matInput formControlName="postalcode" />
+            <mat-error *ngIf="form.get('address.postalcode')?.hasError('required')">Postal code is required</mat-error>
+            <mat-error *ngIf="form.get('address.postalcode')?.hasError('pattern')">Invalid postal code</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Country</mat-label>
+            <input matInput formControlName="country" />
+            <mat-error *ngIf="form.get('address.country')?.hasError('required')">Country is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="actions">
+            
+            @if (serverMessage) {
+                <!-- Success & countdown -->
+                <div class="server-msg" *ngIf="serverMessage">
+                    <mat-icon color="primary">check_circle</mat-icon>
+                    {{ serverMessage }}
+                    <span *ngIf="redirectIn > 0"> — Redirecting in {{ redirectIn }}s…</span>
+                </div>
+                } @else {
+                    <!-- Error -->
+                    <div class="server-err" *ngIf="serverError">
+                        <mat-icon color="warn">error</mat-icon> {{ serverError }}
+                    </div>
+                }
+
+           
+
+            
+          <button mat-raised-button color="primary" type="submit" [disabled]="submitting || form.invalid">
+            {{ submitting ? 'Submitting...' : 'Register' }}
+          </button>
+        </div>
+      </form>
+
+    </mat-card-content>
+  </mat-card>
+</div>

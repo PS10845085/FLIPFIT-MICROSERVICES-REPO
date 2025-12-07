@@ -20,7 +20,10 @@ export const guestGuard: CanActivateFn = (route, state): boolean | UrlTree => {
 
   // If already logged in, redirect away from login to dashboard
   if (user?.token) {
-    return router.parseUrl('/dashboard');
+    const roleId = auth.getCurrentRoleId();
+    const target = auth.getDashboardPathForRole(roleId);
+
+    return router.parseUrl(target);
   }
 
   // Not logged in => allow access to login

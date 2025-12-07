@@ -1,15 +1,16 @@
-
 <mat-card>
 <mat-card-content>
 <mat-toolbar color="primary" fxLayout="row" fxLayoutAlign="space-between center">
   <div class="left-aligned-menu">
   <span>
-    <button mat-button routerLink="/">{{title()}}</button>
-    <button mat-button routerLinkActive="active" routerLink="/"><mat-icon>home</mat-icon></button>
+    <h1> <button mat-button  extended routerLink="/">{{title()}}</button></h1>
   </span>
   </div>
   
-  <div  class="right-aligned-menu" fxLayout="row" fxShow="false" fxShow.gt-sm>
+
+
+  <div class="actions" fxLayout="row" fxShow="false" fxShow.gt-sm>
+     @if (!auth.isLoggedIn()) {
     <button mat-button  routerLinkActive="active" routerLink="/login" >
       <mat-icon>login</mat-icon>
       Login
@@ -18,7 +19,16 @@
       <mat-icon>person_add</mat-icon>
       Register
     </button>
+  } @else {
     
+     <button mat-button matButton="elevated">
+      <mat-icon>notification_add</mat-icon>
+      Notifications</button>
+    
+    <button mat-button matButton="elevated" (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      Logout</button>
+  }
   </div>
 </mat-toolbar>
 </mat-card-content>

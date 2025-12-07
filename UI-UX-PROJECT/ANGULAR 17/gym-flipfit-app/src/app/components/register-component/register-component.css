@@ -1,0 +1,33 @@
+mat-card {
+  max-width: 800px;
+  margin: 2em auto;
+  text-align: center;
+}
+.register-container {
+  max-width: 90%;
+  margin: 24px auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.grid .full {
+  grid-column: 1 / -1;
+}
+
+.actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.server-msg, .server-err {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

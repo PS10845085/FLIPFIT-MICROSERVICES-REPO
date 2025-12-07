@@ -1,0 +1,26 @@
+
+<!-- src/app/components/admin-dashboard-component/admin-dashboard-component.html -->
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav mode="side" opened class="sidenav">
+    <mat-toolbar color="primary" class="sidenav-header">Gym App — Admin</mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item *ngFor="let item of menu"
+         [routerLink]="[item.route]"
+         routerLinkActive="active">
+        <mat-icon matListIcon>{{ item.icon }}</mat-icon>
+        <span matLine>{{ item.label }}</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary" class="top-toolbar">
+      <span class="flex-1">Admin Dashboard</span>
+      <!-- <button mat-button (click)="logout()">
+        <mat-icon>logout</mat-icon> Logout
+      </button> -->
+    </mat-toolbar>
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

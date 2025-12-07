@@ -43,7 +43,15 @@ public class GymFlipFitCenterController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 		
 	}
+	
+	@RequestMapping(value = "/active-centers", method = RequestMethod.GET)
+	public ResponseEntity<RestApiResponse> getActiveCenters() {
+		List<GymFlipFitCenter> centerList = centerService.findAllActiveCenters();
+		RestApiResponse response = new RestApiResponse("SUCCESS", "Centers fetched successfully !", centerList);
 
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+		
+	}
 	@RequestMapping(value = "/centers/{id}", method = RequestMethod.GET)
 	public ResponseEntity<GymFlipFitCenter> getCenterById(@PathVariable Long id) {
 		return centerService.findCenterById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());

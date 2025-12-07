@@ -1,16 +1,18 @@
 package com.lti.flipfit.services;
 
-import java.util.List;
+import java.util.List;  
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lti.flipfit.entity.GymFlipFitCustomer;
+import com.lti.flipfit.entity.GymCustomer;
+import com.lti.flipfit.entity.GymUser;
 import com.lti.flipfit.exceptions.CustomerNotFoundException;
+import com.lti.flipfit.repository.GymCustomerRepository;
 import com.lti.flipfit.repository.GymFlipFitCustomerRepository;
-
+import com.lti.flipfit.constants.ConstantLists;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -18,39 +20,41 @@ import jakarta.transaction.Transactional;
 public class GymFlipFitCustomerServiceImpl implements GymFlipFitCustomerService {
 
 	@Autowired
-	private GymFlipFitCustomerRepository customerRepository;
+	private GymCustomerRepository customerRepository;
 
-	public GymFlipFitCustomerServiceImpl(GymFlipFitCustomerRepository customerRepository) {
+	public GymFlipFitCustomerServiceImpl(GymCustomerRepository customerRepository) {
 		this.customerRepository = customerRepository;
 	}
 
+	
 	@Override
 	public Optional findCustomerById(Long id) {
 		return customerRepository.findById(id).map(this::toDto);
 	}
 
 	@Override
-	public List<com.lti.flipfit.entity.GymFlipFitCustomer> findAllCustomers() {
+	public List<GymCustomer> findAllCustomers() {
 		return customerRepository.findAll().stream().collect(Collectors.toList());
 	}
 
 	@Override
-	public Optional<GymFlipFitCustomer> updateCustomer(Long id, GymFlipFitCustomer customerDetails) {
+	public Optional<GymCustomer> updateCustomer(Long id, GymCustomer customerDetails) {
 		return customerRepository.findById(id).map(entity -> {
 			// Apply incoming DTO changes to entity
-			entity.setCustomerId(customerDetails.getCustomerId());
-			entity.setCustomerFirstName(customerDetails.getCustomerFirstName());
-			entity.setCustomerLastName(customerDetails.getCustomerLastName());
+			
+			entity.setId(customerDetails.getId());
+			entity.setFirstname(customerDetails.getFirstname());
+			entity.setLastname(customerDetails.getLastname());
 			entity.setEmail(customerDetails.getEmail());
-			entity.setPhoneNo(customerDetails.getEmail());
-			entity.setStatus(customerDetails.getStatus());
-			entity.setUpdatedAt(customerDetails.getUpdatedAt());
+			entity.setMobile(customerDetails.getMobile());
 			entity.setAddress(customerDetails.getAddress());
-
+			entity.setUpdatedAt(customerDetails.getUpdatedAt());
+			
+			
 			// ... set any other fields you have
 
 			// Persist and return DTO
-			com.lti.flipfit.entity.GymFlipFitCustomer saved = customerRepository.save(entity);
+			GymCustomer saved = customerRepository.save(entity);
 			return toDto(saved);
 		});
 	}
@@ -60,49 +64,62 @@ public class GymFlipFitCustomerServiceImpl implements GymFlipFitCustomerService 
 		customerRepository.deleteById(id);
 	}
 
+	
+	 @Transactional()
+	    public List<GymCustomer> getAllCustomerList() {
+		 
+		 List<GymCustomer> customer = customerRepository.findByRoleIdWithAddress(ConstantLists.CUSTOMER_ROLE_ID)
+	                .orElseThrow(() -> new IllegalArgumentException("User not found for RoleId: " + 3));
+	        
+		    // Return success response
+		    return customer;
+		    
+	    }
+
+	
+	
 	// ------------ Mapping helpers ------------
 
-	private GymFlipFitCustomer toDto(com.lti.flipfit.entity.GymFlipFitCustomer e) {
-		GymFlipFitCustomer dto = new GymFlipFitCustomer();
-		dto.setCustomerId(e.getCustomerId());
-		dto.setCustomerFirstName(e.getCustomerFirstName());
-		dto.setCustomerLastName(e.getCustomerLastName());
-		dto.setStatus(e.getStatus());
-		dto.setCreatedAt(e.getCreatedAt());
+	
+	private GymCustomer toDto(GymCustomer e) {
+		GymCustomer dto = new GymCustomer();
+		
+		dto.setId(e.getId());
+		dto.setFirstname(e.getFirstname());
+		dto.setLastname(e.getLastname());
 		dto.setEmail(e.getEmail());
-		dto.setPhoneNo(e.getPhoneNo());
-		dto.setUpdatedAt(e.getUpdatedAt());
+		dto.setMobile(e.getMobile());
 		dto.setAddress(e.getAddress());
-		// ... copy remaining fields
+		dto.setUpdatedAt(e.getUpdatedAt());
+		
+		
 		return dto;
 	}
 
 	@SuppressWarnings("unused")
-	private com.lti.flipfit.entity.GymFlipFitCustomer toEntity(GymFlipFitCustomer dto) {
-		com.lti.flipfit.entity.GymFlipFitCustomer e = new com.lti.flipfit.entity.GymFlipFitCustomer();
-		e.setCustomerId(dto.getCustomerId());
-		e.setCustomerFirstName(dto.getCustomerFirstName());
-		e.setCustomerLastName(dto.getCustomerLastName());
+	private GymCustomer toEntity(GymCustomer dto) {
+		GymCustomer e = new GymCustomer();
+		
+		e.setId(dto.getId());
+		e.setFirstname(dto.getFirstname());
+		e.setLastname(dto.getLastname());
 		e.setEmail(dto.getEmail());
-		e.setPhoneNo(dto.getPhoneNo());
-		e.setStatus(dto.getStatus());
-		e.setUpdatedAt(dto.getUpdatedAt());
-		e.setCreatedAt(dto.getCreatedAt());
+		e.setMobile(dto.getMobile());
 		e.setAddress(dto.getAddress());
-
+		e.setUpdatedAt(dto.getUpdatedAt());
 		// ... copy remaining fields
 		return e;
 	}
 
 	@Override
-	public GymFlipFitCustomer createCustomer(GymFlipFitCustomer customer) {
+	public GymCustomer createCustomer(GymCustomer customer) {
 
-		GymFlipFitCustomer entity = toEntity(customer);
+		GymCustomer entity = toEntity(customer);
 
 		// Typically, you do NOT set PK on create if DB auto-generates.
 		// If your PK is not auto-generated, ensure DTO carries a unique customerId.
 
-		GymFlipFitCustomer saved = customerRepository.save(entity);
+		GymCustomer saved = customerRepository.save(entity);
 		return toDto(saved);
 	}
 
@@ -131,7 +148,7 @@ public class GymFlipFitCustomerServiceImpl implements GymFlipFitCustomerService 
 	/** Soft delete: mark as deleted = true */
 	@Transactional
 	public void softDeleteById(Long id) {
-		Optional<GymFlipFitCustomer> c = Optional
+		Optional<GymCustomer> c = Optional
 				.of(customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException(id)));
 
 		// c.setDeleted(true);

@@ -62,9 +62,11 @@ export class LoginComponent {
         this.loading = false;
         if (result.ok) {
           this.success = result.message;
-          console.log('[LoginComponent] login success', result);
-          // Redirect to a protected route
-           this.router.navigateByUrl('/dashboard');
+          
+          const roleId = result.userRoleId ?? this.auth.getCurrentRoleId();
+          const target = this.auth.getDashboardPathForRole(roleId);
+          this.router.navigateByUrl(target);
+
         } else {
           this.error = result.message;
           console.warn('[LoginComponent] login failed (API ERROR)', result);

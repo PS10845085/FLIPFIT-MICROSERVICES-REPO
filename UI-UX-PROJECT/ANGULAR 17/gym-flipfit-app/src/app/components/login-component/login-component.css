@@ -2,7 +2,7 @@
 /* src/app/login-component/login-component.component.css */
 .form { display:flex; flex-direction:column; gap:12px; max-width:360px; }
 label { display:flex; flex-direction:column; gap:6px; }
-input { padding:8px; border:1px solid #ccc; border-radius:6px; }
+input { padding:2px; border:1px solid #ccc; border-radius:6px; }
 button { padding:8px 12px; }
 .error { color:#c0392b; }
 .success { color:#2ecc71; }
@@ -15,4 +15,9 @@ mat-card {
 
 mat-form-field {
   display: block;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
 }

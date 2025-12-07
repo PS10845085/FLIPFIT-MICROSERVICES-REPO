@@ -17,4 +17,6 @@ public interface GymFlipFitCenterService {
 	String deleteCenter(Long id);
 
 	GymFlipFitCenter saveCenter(CreateCenterRequest createCenterRequest);
+
+	List<GymFlipFitCenter> findAllActiveCenters();
 }

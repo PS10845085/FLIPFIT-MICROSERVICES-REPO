@@ -1,6 +1,6 @@
 package com.lti.flipfit.rest;
 
-import java.util.List;
+import java.util.List; 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lti.flipfit.entity.GymFlipFitAdmin;
-import com.lti.flipfit.entity.GymFlipFitCustomer;
+import com.lti.flipfit.entity.GymAdmin;
+import com.lti.flipfit.entity.GymCustomer;
 import com.lti.flipfit.repository.GymFlipFitCustomerRepository;
 import com.lti.flipfit.services.GymFlipFitAdminService;
 import com.lti.flipfit.services.GymFlipFitCustomerService;
@@ -36,27 +36,27 @@ public class GymFlipFitAdminRestController {
 	private GymFlipFitCustomerRepository customerRepository;
 
 	@RequestMapping(value = "/customer/{id}", produces = MediaType.APPLICATION_JSON, method = RequestMethod.GET)
-	public ResponseEntity<GymFlipFitAdmin> getCustomerById(@PathVariable Long id) {
+	public ResponseEntity<GymAdmin> getCustomerById(@PathVariable Long id) {
 		System.out.println("custid ---");
 		return adminService.findCustomerById(id);// .map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 	}
 
 	@GetMapping("/getAllCustData")
-	public List<com.lti.flipfit.entity.GymFlipFitCustomer> getAllCustomer() {
+	public List<GymCustomer> getAllCustomer() {
 		return customerRepository.findAll();
 	}
 
 	@PutMapping("/updateCustomers/{id}")
-	public ResponseEntity<GymFlipFitCustomer> updateCustomer(@PathVariable Long id,
-			@RequestBody GymFlipFitCustomer customerDetails) {
+	public ResponseEntity<GymCustomer> updateCustomer(@PathVariable Long id,
+			@RequestBody GymCustomer customerDetails) {
 
 		return customerService.updateCustomer(id, customerDetails).map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@PostMapping(value = "/customers", consumes = "application/json", produces = "application/json")
-	public ResponseEntity<GymFlipFitCustomer> createCustomer(@RequestBody GymFlipFitCustomer customer) {
-		GymFlipFitCustomer created = customerService.createCustomer(customer);
+	public ResponseEntity<GymCustomer> createCustomer(@RequestBody GymCustomer customer) {
+		GymCustomer created = customerService.createCustomer(customer);
 		// For a RESTful API, return 201 + Location header:
 		// URI location = URI.create("/api/customers/" + created.getCustomerId());
 		// return ResponseEntity.created(location).body(created);

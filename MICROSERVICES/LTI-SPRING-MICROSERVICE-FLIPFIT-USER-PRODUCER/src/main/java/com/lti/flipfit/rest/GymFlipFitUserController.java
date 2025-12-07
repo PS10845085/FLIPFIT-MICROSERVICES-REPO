@@ -126,7 +126,7 @@ public class GymFlipFitUserController {
 
 		String token = jwtService.generateToken(userData, extraClaims);
 
-		Map<String, Object> payload = Map.of("token", token, "userName", userData.getUsername(), "userId", userData.getId());
+		Map<String, Object> payload = Map.of("token", token, "userName", userData.getUsername(), "userId", userData.getId(), "userRoleId",userData.getRoleid());
 
 		RestApiResponse response = new RestApiResponse("SUCCESS", "Login successfully !", payload);
 

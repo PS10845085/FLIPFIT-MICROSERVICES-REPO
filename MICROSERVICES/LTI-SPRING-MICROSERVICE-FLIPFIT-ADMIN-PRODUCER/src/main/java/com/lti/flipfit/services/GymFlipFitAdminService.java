@@ -1,17 +1,17 @@
 package com.lti.flipfit.services;
 
-import java.util.List;
+import java.util.List; 
 
 import org.springframework.http.ResponseEntity;
 
-import com.lti.flipfit.beans.GymFlipFitCustomer;
-import com.lti.flipfit.entity.GymFlipFitAdmin;
+import com.lti.flipfit.entity.GymAdmin;
+import com.lti.flipfit.entity.GymCustomer;
 
 public interface GymFlipFitAdminService  {
 	
-	public ResponseEntity<GymFlipFitAdmin> findCustomerById(Long id);
+	public ResponseEntity<GymAdmin> findCustomerById(Long id);
 
-	public List<GymFlipFitCustomer> findAllCustomers();
+	public List<GymCustomer> findAllCustomers();
 
 	
 

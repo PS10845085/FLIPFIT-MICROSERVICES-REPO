@@ -1,0 +1,21 @@
+
+/* src/app/components/owner-dashboard-component/owner-dashboard-component.css */
+.sidenav-container { height: 100vh; }
+.sidenav { width: 260px; }
+.sidenav-header { height: 64px; }
+.top-toolbar { position: sticky; top: 0; z-index: 2; }
+.content { padding: 16px; }
+a.active { background: rgba(0,0,0,0.08);     color: var(--mat-button-text-label-text-color, var(--mat-sys-primary)); }
+.flex-1 { flex: 1; }
+
+
+
+a.mat-mdc-list-item .mdc-list-item__content {
+  display: flex; 
+  align-items: center; 
+  gap: 10px; 
+}
+a.mat-mdc-list-item mat-icon {
+  font-size: 18px;
+    line-height: 34px;
+}

@@ -1,19 +1,22 @@
 package com.lti.flipfit.services;
 
-import java.util.List;
+import java.util.List; 
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.lti.flipfit.entity.GymFlipFitCustomer;
+import com.lti.flipfit.entity.GymCustomer;
+import com.lti.flipfit.entity.GymUser;
 
 @Service
 public interface GymFlipFitCustomerService {
-	public GymFlipFitCustomer createCustomer(GymFlipFitCustomer customer);
+	public GymCustomer createCustomer(GymCustomer customer);
 
-	public List<com.lti.flipfit.entity.GymFlipFitCustomer> findAllCustomers();
+	public List<GymCustomer> findAllCustomers();
+	
+	public List<GymCustomer> getAllCustomerList();
 
-	public Optional<GymFlipFitCustomer> findCustomerById(Long id);
+	public Optional<GymCustomer> findCustomerById(Long id);
 
 	public void deleteCustomer(Long id);
 
@@ -21,8 +24,8 @@ public interface GymFlipFitCustomerService {
 	// GymFlipFitCustomer customerDetails);
 	// << align to controller taken bean not entity here
 
-	Optional<com.lti.flipfit.entity.GymFlipFitCustomer> updateCustomer(Long id,
-			com.lti.flipfit.entity.GymFlipFitCustomer customerDetails);
+	Optional<GymCustomer> updateCustomer(Long id,
+			GymCustomer customerDetails);
 
 	public void deleteById(Long id);
 

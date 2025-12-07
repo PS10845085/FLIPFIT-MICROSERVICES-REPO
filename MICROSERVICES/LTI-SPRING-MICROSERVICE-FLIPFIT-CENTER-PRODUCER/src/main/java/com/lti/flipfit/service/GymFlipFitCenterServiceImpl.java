@@ -25,10 +25,16 @@ public class GymFlipFitCenterServiceImpl implements GymFlipFitCenterService {
 	@Override
 	public List<GymFlipFitCenter> findAllCenters() {
 		
-		List<GymFlipFitCenter> activeCenters = centerRepository.findByStatus(Status.ACTIVE);
-		return activeCenters;
+		List<GymFlipFitCenter> allCenters =centerRepository.findAll(); //centerRepository.findByStatus(Status.ACTIVE);
+		return allCenters;
 	}
-
+	
+	@Override
+	public List<GymFlipFitCenter> findAllActiveCenters() {
+		
+		List<GymFlipFitCenter> allActiveCenters =centerRepository.findByStatus(Status.ACTIVE);
+		return allActiveCenters;
+	}
 	// Find a center by ID or throw exception if not found
 	@Override
 	public Optional<GymFlipFitCenter> findCenterById(Long id) {
