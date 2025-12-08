@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 public class GymAdmin {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private Long id;
 
@@ -25,8 +25,10 @@ public class GymAdmin {
     @Column(name="mobile")
     private Long mobile;
     
-    @Column(name="centerid")
-	private Long centerid;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "center_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_gymuser_center"))
+    private GymCenter center;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_gymuser_address"))
@@ -83,12 +85,13 @@ public class GymAdmin {
 		this.mobile = mobile;
 	}
 
-	public Long getCenterid() {
-		return centerid;
+
+	public GymCenter getCenter() {
+		return center;
 	}
 
-	public void setCenterid(Long centerid) {
-		this.centerid = centerid;
+	public void setCenter(GymCenter center) {
+		this.center = center;
 	}
 
 	public GymAddress getAddress() {

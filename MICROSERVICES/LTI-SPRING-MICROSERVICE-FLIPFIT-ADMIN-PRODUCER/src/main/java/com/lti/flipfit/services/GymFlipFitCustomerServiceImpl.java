@@ -8,10 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lti.flipfit.entity.GymCustomer;
-import com.lti.flipfit.entity.GymUser;
 import com.lti.flipfit.exceptions.CustomerNotFoundException;
 import com.lti.flipfit.repository.GymCustomerRepository;
-import com.lti.flipfit.repository.GymFlipFitCustomerRepository;
 import com.lti.flipfit.constants.ConstantLists;
 import jakarta.transaction.Transactional;
 
@@ -77,6 +75,9 @@ public class GymFlipFitCustomerServiceImpl implements GymFlipFitCustomerService 
 	    }
 
 	
+
+
+
 	
 	// ------------ Mapping helpers ------------
 
@@ -96,6 +97,7 @@ public class GymFlipFitCustomerServiceImpl implements GymFlipFitCustomerService 
 		return dto;
 	}
 
+	
 	@SuppressWarnings("unused")
 	private GymCustomer toEntity(GymCustomer dto) {
 		GymCustomer e = new GymCustomer();

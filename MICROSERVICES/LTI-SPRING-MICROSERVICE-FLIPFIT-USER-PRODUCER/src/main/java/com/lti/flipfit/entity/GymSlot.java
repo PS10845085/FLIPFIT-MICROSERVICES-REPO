@@ -17,7 +17,7 @@ import jakarta.persistence.TemporalType;
  */
 @Entity
 @Table(name = "gymslot")
-public class GymFlipFitSlot {
+public class GymSlot {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

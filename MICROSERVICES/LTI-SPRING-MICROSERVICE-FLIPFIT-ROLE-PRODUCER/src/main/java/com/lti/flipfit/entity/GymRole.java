@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 public class GymRole {
 
     @Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "roleid", nullable = false)
     private Long roleId; // No @GeneratedValue since schema doesn't specify auto-increment
 

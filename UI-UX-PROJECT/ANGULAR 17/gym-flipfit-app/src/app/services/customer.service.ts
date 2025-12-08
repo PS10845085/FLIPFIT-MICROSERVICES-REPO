@@ -15,6 +15,16 @@ export interface CustomerAddress {
   postalcode: string;
 }
 
+export interface Center{
+    id: number,
+    email_id: string,
+    name: string,
+    owner_id:number,
+    phone_no : number,
+    status: string,
+    address_id:number
+}
+
 export interface CustomerUser {
   id: number;
   username: string;
@@ -30,7 +40,7 @@ export interface Customer {
   lastname: string;
   email: string;
   mobile: number;
-  centerid: number;
+  center: Center;
   address: CustomerAddress;
   createdAt: number[];
   updatedAt: number[];
@@ -50,7 +60,7 @@ export class CustomerService {
   constructor(private http: HttpClient) {}
 
   list(): Observable<Customer[]> {
-    const url = `${this.ADMIN_SERVICE_BASE_URL}/customer/list`;
+    const url = `${this.ADMIN_SERVICE_BASE_URL}/admin/customer-list`;
     // If this endpoint is public, we can skip auth header (matches your other services)
     return this.http.get<ApiCustomerListResponse>(url, { headers: { skipAuth: 'true' } }).pipe(
       map(res => (res.status === 'SUCCESS' && Array.isArray(res.data)) ? res.data : []),

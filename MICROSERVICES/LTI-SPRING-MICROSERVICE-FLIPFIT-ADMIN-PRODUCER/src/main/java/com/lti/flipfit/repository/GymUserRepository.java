@@ -7,12 +7,15 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.lti.flipfit.constants.JpqlGymUser;
 import com.lti.flipfit.entity.GymUser;
+
+import jakarta.transaction.Transactional;
 
 /**
  * 
@@ -30,6 +33,14 @@ public interface GymUserRepository extends JpaRepository<GymUser, Long> {
                                                               @Param("status") String status);
 	
 	
+
+	// --- JPQL UPDATE for status by id ---
+	    @Modifying(clearAutomatically = true, flushAutomatically = true)
+	    @Transactional
+	    @Query(JpqlGymUser.UPDATE_STATUS_BY_ID)
+	    int updateStatusById(@Param("id") Long id, @Param("status") String status);
+	    
+	    
 
 }
 

@@ -19,7 +19,7 @@ public WebMvcConfigurer corsConfigurer() {
          .allowedHeaders("*") // or list specific headers
          .exposedHeaders("Authorization","Content-Type")
          .allowCredentials(true)
-         .maxAge(3600);
+         .maxAge(604800);
    }
  };
 }

@@ -27,7 +27,7 @@ import { OwnerBillingComponent } from './components/owner-dashboard-component/pa
 // Admin pages
 import { AdminOverviewComponent } from './components/admin-dashboard-component/pages/admin-overview-component/admin-overview-component';
 import { AdminGymsComponent } from './components/admin-dashboard-component/pages/admin-gyms-component/admin-gyms-component';
-import { AdminUsersComponent } from './components/admin-dashboard-component/pages/admin-users-component/admin-users-component';
+import { AdminCustomersComponent } from './components/admin-dashboard-component/pages/admin-customers-component/admin-customers-component';
 import { AdminSettingsComponent } from './components/admin-dashboard-component/pages/admin-settings-component/admin-settings-component';
 import { AdminAuditsComponent } from './components/admin-dashboard-component/pages/admin-audits-component/admin-audits-component';
 
@@ -69,7 +69,7 @@ const routes: Routes = [
       { path: '', pathMatch: 'full', redirectTo: 'overview' },
       { path: 'overview', component: AdminOverviewComponent },
       { path: 'gyms', component: AdminGymsComponent },
-      { path: 'users', component: AdminUsersComponent },
+      { path: 'users', component: AdminCustomersComponent },
       { path: 'settings', component: AdminSettingsComponent },
       { path: 'audits', component: AdminAuditsComponent }
     ]

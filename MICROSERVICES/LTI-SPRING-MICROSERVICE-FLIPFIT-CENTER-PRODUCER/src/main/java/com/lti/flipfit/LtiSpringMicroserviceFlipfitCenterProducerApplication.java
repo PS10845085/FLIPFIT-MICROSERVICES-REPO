@@ -21,5 +21,5 @@ public class LtiSpringMicroserviceFlipfitCenterProducerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(LtiSpringMicroserviceFlipfitCenterProducerApplication.class, args);
 	}
-
+ 
 }

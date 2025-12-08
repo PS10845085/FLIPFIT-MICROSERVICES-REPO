@@ -1,6 +1,5 @@
 package com.lti.flipfit.config;
 
-//WebConfig.java
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -17,8 +16,10 @@ public WebMvcConfigurer corsConfigurer() {
      registry.addMapping("/api/**")
          .allowedOrigins("http://localhost:4200")
          .allowedMethods("GET","POST","PUT","PATCH","DELETE","OPTIONS")
-         .allowedHeaders("Content-Type","Authorization")
-         .allowCredentials(true); // only if cookies/credentials needed
+         .allowedHeaders("*") // or list specific headers
+         .exposedHeaders("Authorization","Content-Type")
+         .allowCredentials(true)
+         .maxAge(604800);
    }
  };
 }

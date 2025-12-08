@@ -16,4 +16,14 @@ public final class JpqlGymOwner {
 	          AND u.status = :status
 	      """;
  
+ public static final String FIND_BY_ROLE_ID_WITH_ADDRESS = 
+		 """
+		    SELECT o
+		    FROM GymOwner o
+		    JOIN FETCH o.user u
+		    LEFT JOIN FETCH o.address a
+		    LEFT JOIN FETCH o.center cn
+		    WHERE u.roleid = :roleid
+		"""; 
+ 
 }

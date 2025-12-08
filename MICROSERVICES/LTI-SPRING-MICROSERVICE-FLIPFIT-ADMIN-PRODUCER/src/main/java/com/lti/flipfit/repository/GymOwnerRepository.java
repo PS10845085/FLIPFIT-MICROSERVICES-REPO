@@ -3,6 +3,7 @@
  */
 package com.lti.flipfit.repository;
 
+import java.util.List;
 import java.util.Optional; 
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +12,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.lti.flipfit.constants.JpqlGymOwner;
+import com.lti.flipfit.constants.JpqlGymUser;
+import com.lti.flipfit.entity.GymCustomer;
 import com.lti.flipfit.entity.GymOwner;
 
 /**
@@ -24,7 +27,8 @@ public interface GymOwnerRepository extends JpaRepository<GymOwner, Long> {
     Optional<GymOwner> findOwnerWithUserAndAddress(@Param("username") String username,
                                                          @Param("status") String status);
 
-
+	@Query(JpqlGymOwner.FIND_BY_ROLE_ID_WITH_ADDRESS)
+	Optional<List<GymOwner>> findByRoleIdWithAddress(@Param("roleid") Long roleid);
 	
 }
 

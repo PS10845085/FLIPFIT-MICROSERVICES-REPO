@@ -18,12 +18,14 @@ import com.lti.flipfit.dto.LoginDto;
 import com.lti.flipfit.dto.UserDto;
 import com.lti.flipfit.entity.GymAddress;
 import com.lti.flipfit.entity.GymAdmin;
+import com.lti.flipfit.entity.GymCenter;
 import com.lti.flipfit.entity.GymCustomer;
 import com.lti.flipfit.entity.GymOwner;
 import com.lti.flipfit.entity.GymRole;
 import com.lti.flipfit.entity.GymUser;
 import com.lti.flipfit.repository.GymAddressRepository;
 import com.lti.flipfit.repository.GymAdminRepository;
+import com.lti.flipfit.repository.GymCenterRepository;
 import com.lti.flipfit.repository.GymCustomerRepository;
 import com.lti.flipfit.repository.GymOwnerRepository;
 import com.lti.flipfit.repository.GymRoleRepository;
@@ -76,14 +78,16 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 	@Autowired
     private final GymRoleRepository roleRepository;
-
+	@Autowired
+    private final GymCenterRepository centerRepository;
+	
 
     // for checking caching is working or not
     private final AtomicInteger loginExecCount = new AtomicInteger();
 
     
 
-	public UserServiceImpl(GymUserRepository userRepository, GymAddressRepository addressRepository, GymCustomerRepository customerRepository, GymRoleRepository roleRepository,GymAdminRepository adminRepository,GymOwnerRepository ownerRepository,  PasswordEncoder passwordEncoder) {
+	public UserServiceImpl(GymUserRepository userRepository, GymAddressRepository addressRepository, GymCustomerRepository customerRepository, GymRoleRepository roleRepository,GymAdminRepository adminRepository,GymOwnerRepository ownerRepository,  PasswordEncoder passwordEncoder, GymCenterRepository centerRepository) {
 	        this.userRepository = userRepository;
 	        this.addressRepository = addressRepository;
 	        this.customerRepository = customerRepository;
@@ -91,6 +95,7 @@ public class UserServiceImpl implements UserService {
 	        this.ownerRepository = ownerRepository;
 	        this.passwordEncoder = passwordEncoder;
 	        this.roleRepository = roleRepository;
+	        this.centerRepository = centerRepository;
 	    }
 
 
@@ -142,6 +147,16 @@ public class UserServiceImpl implements UserService {
         GymRole customerRoleData = roleRepository.findById(userDto.getRoleid())
                 .orElseThrow(() -> new RuntimeException("Role is not found"));
 
+        
+
+        // (NEW) Resolve GymCenter if provided (required for customer/owner/admin)
+          GymCenter gymCenter = null;
+          if (userDto.getCenterid() != null) {
+              gymCenter = centerRepository.findById(userDto.getCenterid())
+                      .orElseThrow(() -> new RuntimeException("Center not found for id: " + userDto.getCenterid()));
+          }
+
+          
         // 1) Save address
         GymAddress savedAddress = saveAddress(userDto);
 
@@ -149,15 +164,15 @@ public class UserServiceImpl implements UserService {
         GymUser savedUser = saveUser(userDto);
 
         
-        // 3) Save customer, owner and admin  linking user + address
+        // 3) Save customer, owner and admin  linking user + address + center
         
         
        if(ConstantLists.OWNER_ROLE_ID.equals(savedUser.getRoleid())  ) {
-    	   GymOwner savedOwner = saveOwner(userDto, savedUser, savedAddress);
+    	   GymOwner savedOwner = saveOwner(userDto, savedUser, savedAddress, gymCenter);
        }else if (ConstantLists.ADMIN_ROLE_ID.equals(savedUser.getRoleid()) ) {
-    	   GymAdmin savedAdmin = saveAdmin(userDto, savedUser, savedAddress);
+    	   GymAdmin savedAdmin = saveAdmin(userDto, savedUser, savedAddress, gymCenter);
 		}else if (ConstantLists.CUSTOMER_ROLE_ID.equals(savedUser.getRoleid()) ) {
-	       GymCustomer savedCustomer = saveCustomer(userDto, savedUser, savedAddress);
+	       GymCustomer savedCustomer = saveCustomer(userDto, savedUser, savedAddress, gymCenter);
 		}
 
 
@@ -306,7 +321,7 @@ public class UserServiceImpl implements UserService {
 	    /**
 	     * Persists a GymCustomer linked to a GymUser and GymAddress.
 	     */
-	    private GymCustomer saveCustomer(UserDto dto, GymUser user, GymAddress address) {
+	    private GymCustomer saveCustomer(UserDto dto, GymUser user, GymAddress address, GymCenter center) {
 	        GymCustomer customer = new GymCustomer();
 	        customer.setFirstname(dto.getFirstname());
 	        customer.setLastname(dto.getLastname());
@@ -315,8 +330,12 @@ public class UserServiceImpl implements UserService {
 	        customer.setAddress(address);
 	        customer.setCreatedAt(LocalDateTime.now());
 	        customer.setUpdatedAt(LocalDateTime.now());
-	        customer.setCenterid(dto.getCenterid());
 	        customer.setUser(user);
+
+	        // set GymCenter association
+	         customer.setCenter(center);
+
+	         
 	        return customerRepository.save(customer);
 	    }
 	    
@@ -324,7 +343,7 @@ public class UserServiceImpl implements UserService {
 	    /**
 	     * Persists a GymOwner linked to a GymUser and GymAddress. 
 	     */
-	    private GymOwner saveOwner(UserDto userDto, GymUser savedUser, GymAddress savedAddress) {
+	    private GymOwner saveOwner(UserDto userDto, GymUser savedUser, GymAddress savedAddress, GymCenter center) {
 	    	GymOwner owner = new GymOwner();
 	        owner.setFirstname(userDto.getFirstname());
 	        owner.setLastname(userDto.getLastname());
@@ -333,15 +352,19 @@ public class UserServiceImpl implements UserService {
 	        owner.setAddress(savedAddress);
 	        owner.setCreatedAt(LocalDateTime.now());
 	        owner.setUpdatedAt(LocalDateTime.now());
-	        owner.setCenterid(userDto.getCenterid());
 	        owner.setUser(savedUser);
+	        
+
+	        // set GymCenter association
+	        owner.setCenter(center);
+	         
 	        return ownerRepository.save(owner);
 		}
 	    
 	    /**
 	     * Persists a GymAdmin linked to a GymUser and GymAddress.
 	     */
-	    private GymAdmin saveAdmin(UserDto userDto, GymUser savedUser, GymAddress savedAddress) {
+	    private GymAdmin saveAdmin(UserDto userDto, GymUser savedUser, GymAddress savedAddress, GymCenter center) {
 	    	GymAdmin admin = new GymAdmin();
 	        admin.setFirstname(userDto.getFirstname());
 	        admin.setLastname(userDto.getLastname());
@@ -350,8 +373,10 @@ public class UserServiceImpl implements UserService {
 	        admin.setAddress(savedAddress);
 	        admin.setCreatedAt(LocalDateTime.now());
 	        admin.setUpdatedAt(LocalDateTime.now());
-	        admin.setCenterid(userDto.getCenterid());
 	        admin.setUser(savedUser);
+
+	        // set GymCenter association
+	        admin.setCenter(center);
 	        return adminRepository.save(admin);
 		}
 

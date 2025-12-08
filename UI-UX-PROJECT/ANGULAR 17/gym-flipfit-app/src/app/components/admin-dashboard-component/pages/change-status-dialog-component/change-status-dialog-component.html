@@ -1,0 +1,17 @@
+
+<!-- src/app/components/admin-dashboard-component/pages/change-status-dialog.component.html -->
+<h2 mat-dialog-title>Change Status</h2>
+<mat-dialog-content>
+  <p>
+    Change status for <strong>{{ data.username }}</strong>?
+  </p>
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>New status</mat-label>
+    <mat-select [(value)]="selected">
+      <mat-option *ngFor="let s of statuses" [value]="s">{{ s }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="confirm()">Update</button>

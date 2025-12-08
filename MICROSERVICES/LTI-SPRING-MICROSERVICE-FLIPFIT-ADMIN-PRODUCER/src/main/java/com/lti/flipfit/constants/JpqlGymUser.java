@@ -32,6 +32,7 @@ public final class JpqlGymUser {
 	    FROM GymCustomer c
 	    JOIN FETCH c.user u
 	    LEFT JOIN FETCH c.address a
+	    LEFT JOIN FETCH c.center cn
 	    WHERE u.roleid = :roleid
 	""";
  
@@ -49,5 +50,11 @@ public final class JpqlGymUser {
 public static final String FIND_BY_USERID = 
 		"SELECT g FROM GymCustomer g " +
         "WHERE g.userid = :userid";
+
+
+public static final String UPDATE_STATUS_BY_ID =
+        "UPDATE GymUser u SET u.status = :status WHERE u.id = :id";
+
+
 }
 

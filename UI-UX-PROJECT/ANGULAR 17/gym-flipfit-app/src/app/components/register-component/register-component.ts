@@ -92,6 +92,7 @@ private loadCenters(): void {
 
     this.centerService.getActiveCenters().subscribe({
       next: (data) => {
+
         this.centers = data ?? [];
         this.centersLoading = false;
 

@@ -1,8 +1,8 @@
 package com.lti.flipfit.entity;
 
-import java.util.List;
+import java.util.List; 
 
-import com.lti.flipfit.constant.Status;
+import com.lti.flipfit.constants.Status;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -19,7 +19,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "gymcenter")
-public class GymFlipFitCenter {
+public class GymCenter {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,11 +39,11 @@ public class GymFlipFitCenter {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "address_id", referencedColumnName = "id")
-	private GymFlipFitAddress address;
+	private GymAddress address;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "slot_id") // Foreign key in gymscheduler table
-	private List<GymFlipFitSlot> slots;
+	private List<GymSlot> slots;
 
 	@Enumerated(EnumType.STRING)
 	@Column(length = 20, nullable = false)
@@ -89,19 +89,19 @@ public class GymFlipFitCenter {
 		this.phoneNo = phoneNo;
 	}
 
-	public GymFlipFitAddress getAddress() {
+	public GymAddress getAddress() {
 		return address;
 	}
 
-	public void setAddress(GymFlipFitAddress address) {
+	public void setAddress(GymAddress address) {
 		this.address = address;
 	}
 
-	public List<GymFlipFitSlot> getSlots() {
+	public List<GymSlot> getSlots() {
 		return slots;
 	}
 
-	public void setSlots(List<GymFlipFitSlot> slots) {
+	public void setSlots(List<GymSlot> slots) {
 		this.slots = slots;
 	}
 

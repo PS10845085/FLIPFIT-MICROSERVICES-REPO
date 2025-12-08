@@ -24,4 +24,4 @@ public class LtiSpringMicroserviceFlipfitUserProducerApplication {
 		SpringApplication.run(LtiSpringMicroserviceFlipfitUserProducerApplication.class, args);
 	}
 
-}
+} 

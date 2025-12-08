@@ -31,6 +31,10 @@ import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider'; 
 
 
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
+
 // Forms
 import { ReactiveFormsModule } from '@angular/forms'
 
@@ -54,7 +58,7 @@ import { OwnerBillingComponent } from './components/owner-dashboard-component/pa
 // Admin pages
 import { AdminOverviewComponent } from './components/admin-dashboard-component/pages/admin-overview-component/admin-overview-component';
 import { AdminGymsComponent } from './components/admin-dashboard-component/pages/admin-gyms-component/admin-gyms-component';
-import { AdminUsersComponent } from './components/admin-dashboard-component/pages/admin-users-component/admin-users-component';
+import { AdminCustomersComponent } from './components/admin-dashboard-component/pages/admin-customers-component/admin-customers-component';
 import { AdminSettingsComponent } from './components/admin-dashboard-component/pages/admin-settings-component/admin-settings-component';
 import { AdminAuditsComponent } from './components/admin-dashboard-component/pages/admin-audits-component/admin-audits-component';
 
@@ -63,6 +67,7 @@ import { CustomerOverviewComponent } from './components/customer-dashboard-compo
 import { CustomerWorkoutsComponent } from './components/customer-dashboard-component/pages/customer-workouts-component/customer-workouts-component';
 import { CustomerSubscriptionsComponent } from './components/customer-dashboard-component/pages/customer-subscriptions-component/customer-subscriptions-component';
 import { CustomerProfileComponent } from './components/customer-dashboard-component/pages/customer-profile-component/customer-profile-component';
+import { ChangeStatusDialogComponent } from './components/admin-dashboard-component/pages/change-status-dialog-component/change-status-dialog-component';
 
 
 @NgModule({
@@ -83,14 +88,15 @@ import { CustomerProfileComponent } from './components/customer-dashboard-compon
 
     AdminOverviewComponent,
     AdminGymsComponent,
-    AdminUsersComponent,
+    AdminCustomersComponent,
     AdminSettingsComponent,
     AdminAuditsComponent,
     
     CustomerOverviewComponent,
     CustomerWorkoutsComponent,
     CustomerSubscriptionsComponent,
-    CustomerProfileComponent
+    CustomerProfileComponent,
+    ChangeStatusDialogComponent
 
   ],
   imports: [
@@ -118,7 +124,10 @@ import { CustomerProfileComponent } from './components/customer-dashboard-compon
     MatListModule,
     MatPaginatorModule,
     MatSortModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatDialogModule,
+    MatSnackBarModule
+
 
 
   ],

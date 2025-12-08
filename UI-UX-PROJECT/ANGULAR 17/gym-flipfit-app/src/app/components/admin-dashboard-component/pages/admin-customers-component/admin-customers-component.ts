@@ -1,37 +1,47 @@
-// src/app/components/admin-dashboard-component/pages/admin-users.component.ts
+// src/app/components/admin-dashboard-component/pages/admin-customers.component.ts
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+
 import { MatSort } from '@angular/material/sort';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 import { CustomerService, Customer } from '../../../../services/customer.service';
+
+import { GymAdminService } from '../../../../services/admin.service';
+import { ChangeStatusDialogComponent, UserStatus } from '../change-status-dialog-component/change-status-dialog-component';
+
+
 
 type UsersRow = {
   id: number;
   name: string;
   email: string;
   mobile: string;
-  centerid: number;
+  center: string;
   city: string;
   status: string;
   role: string;
   createdAt: string;
   updatedAt: string;
   username: string;
+  userId: number; // GymUser.id
 };
 
 @Component({
-  selector: 'app-admin-users',
-  templateUrl: './admin-users-component.html',
-  styleUrls: ['./admin-users-component.css'],
+  selector: 'app-admin-customers',
+  templateUrl: './admin-customers-component.html',
+  styleUrls: ['./admin-customers-component.css'],
   standalone: false
 })
-export class AdminUsersComponent implements OnInit {
+export class AdminCustomersComponent implements OnInit {
   loading = false;
   error: string | null = null;
 
   displayedColumns = [
-    'id', 'name', 'email', 'mobile', 'centerid', 'city',
-    'status', 'role', 'createdAt', 'updatedAt', 'username'
+    'id', 'name', 'email', 'mobile', 'center', 'city',
+    'status', 'role', 'createdAt', 'updatedAt', 'username', 'actions'
   ];
 
   dataSource = new MatTableDataSource<UsersRow>([]);
@@ -40,7 +50,15 @@ export class AdminUsersComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private customers: CustomerService) {}
+  
+constructor(
+    private customers: CustomerService,
+    private usersApi: GymAdminService,
+    private dialog: MatDialog,
+    private snack: MatSnackBar
+
+  ) {}
+
 
   ngOnInit(): void {
     this.load();
@@ -68,7 +86,7 @@ export class AdminUsersComponent implements OnInit {
       },
       error: (err) => {
         this.loading = false;
-        this.error = err.message ?? 'Unable to load users';
+        this.error = err.message ?? 'Unable to load customers';
       }
     });
   }
@@ -91,8 +109,8 @@ export class AdminUsersComponent implements OnInit {
         row.city.toLowerCase().includes(f) ||
         row.status.toLowerCase().includes(f) ||
         row.role.toLowerCase().includes(f) ||
-        row.mobile.includes(f) ||
-        String(row.centerid).includes(f)
+        row.center.toLowerCase().includes(f) ||
+        row.mobile.includes(f) 
       );
     };
   }
@@ -107,13 +125,15 @@ export class AdminUsersComponent implements OnInit {
       name: `${c.firstname} ${c.lastname}`.trim(),
       email: c.email,
       mobile,
-      centerid: c.centerid,
+      center: c.center?.name ?? '', 
       city: c.address?.city ?? '',
       status: c.user?.status ?? '',
       role,
       createdAt,
       updatedAt,
-      username: c.user?.username ?? ''
+      username: c.user?.username ?? '',
+      userId: c.user?.id ?? 0
+
     };
   }
 
@@ -140,4 +160,45 @@ export class AdminUsersComponent implements OnInit {
       hour: '2-digit', minute: '2-digit'
     }).format(dt);
   }
+
+
+  
+// ===== Actions =====
+
+  changeStatus(row: UsersRow): void {
+    const dialogRef = this.dialog.open(ChangeStatusDialogComponent, {
+      width: '360px',
+      data: {
+        currentStatus: row.status,
+        username: row.username
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((newStatus: UserStatus | null) => {
+      if (!newStatus || newStatus === row.status) return; // cancelled or no change
+
+      // Call API
+      this.loading = true;
+      this.usersApi.updateStatus({ id: row.userId, status: newStatus }).subscribe({
+        next: (updated) => {
+          this.loading = false;
+          // Update row locally for instant feedback
+          row.status = updated.status as UserStatus;
+          this.dataSource.data = [...this.dataSource.data]; // trigger table refresh
+
+          this.snack.open(`Status updated to ${updated.status} for ${updated.username}`, 'OK', {
+            duration: 2500
+          });
+        },
+        error: (err) => {
+          this.loading = false;
+          this.snack.open(err.message ?? 'Failed to update status', 'Dismiss', {
+            duration: 3000
+          });
+        }
+      });
+    });
+  }
+  
 }
+
