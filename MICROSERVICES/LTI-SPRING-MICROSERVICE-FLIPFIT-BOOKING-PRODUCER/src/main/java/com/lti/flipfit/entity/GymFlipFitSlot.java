@@ -1,16 +1,16 @@
 
 package com.lti.flipfit.entity;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 /**
  * Entity representing a gym slot for booking.
@@ -22,13 +22,15 @@ public class GymFlipFitSlot {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
 	private LocalTime startTime;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
 	private LocalTime endTime;
 	private int capacity;
 	private int bookedCount;
 
-	@Temporal(TemporalType.DATE)
-	private Date slotDate;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private LocalDate slotDate;
 
 	private String status;
 
@@ -72,11 +74,11 @@ public class GymFlipFitSlot {
 		this.bookedCount = bookedCount;
 	}
 
-	public Date getSlotDate() {
+	public LocalDate getSlotDate() {
 		return slotDate;
 	}
 
-	public void setSlotDate(Date slotDate) {
+	public void setSlotDate(LocalDate slotDate) {
 		this.slotDate = slotDate;
 	}
 
