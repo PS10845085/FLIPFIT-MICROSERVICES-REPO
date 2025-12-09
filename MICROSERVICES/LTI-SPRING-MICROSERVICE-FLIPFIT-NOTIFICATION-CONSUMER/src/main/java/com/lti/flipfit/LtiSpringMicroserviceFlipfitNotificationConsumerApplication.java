@@ -6,10 +6,10 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootApplication
 @EnableWebMvc
-public class LtiSpringMicroserviceFlipfitNotificationProducerApplication {
+public class LtiSpringMicroserviceFlipfitNotificationConsumerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(LtiSpringMicroserviceFlipfitNotificationProducerApplication.class, args);
+		SpringApplication.run(LtiSpringMicroserviceFlipfitNotificationConsumerApplication.class, args);
 	}
 
 }

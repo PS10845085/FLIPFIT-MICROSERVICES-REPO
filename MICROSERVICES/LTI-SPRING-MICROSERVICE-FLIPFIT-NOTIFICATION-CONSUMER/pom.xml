@@ -8,12 +8,12 @@
 		<version>4.0.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.flipfit</groupId>
-	<artifactId>LTI-SPRING-MICROSERVICE-KAFKA</artifactId>
+	<groupId>com.lti.flipfit</groupId>
+	<artifactId>LTI-SPRING-MICROSERVICE-FLIPFIT-NOTIFICATION-CONSUMER</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>LTI-SPRING-MICROSERVICE-KAFKA</name>
-	<description>LTI-SPRING-MICROSERVICE-FLIPFIT-GYM-NOTIFICATION-PRODUCER</description>
+	<name>LTI-SPRING-MICROSERVICE-FLIPFIT-NOTIFICATION-CONSUMER</name>
+	<description>Gym notification consumer</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -80,7 +80,10 @@
 			<artifactId>spring-restdocs-mockmvc</artifactId>
 			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+   			<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
