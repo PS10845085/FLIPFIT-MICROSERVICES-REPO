@@ -1,0 +1,33 @@
+
+<div class="scheduler-list-container">
+  <h2>Schedules</h2>
+
+  <!-- <button [routerLink]="['/create-schedule']">Create New Schedule</button> -->
+
+  <div *ngIf="loading">Loading schedules...</div>
+  <div *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <table *ngIf="!loading && schedules.length">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Valid From</th>
+        <th>Valid Till</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let s of schedules">
+        <td>{{ s.id }}</td>
+        <td>{{ s.validFrom }}</td>
+        <td>{{ s.validTill }}</td>
+        <td>
+          <button (click)="onUpdate(s)">Update</button>
+          <button (click)="onDelete(s.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && !schedules.length">No schedules found.</div>
+</div>

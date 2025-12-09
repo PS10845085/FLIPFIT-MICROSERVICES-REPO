@@ -1,0 +1,61 @@
+
+.slot-form-container {
+  max-width: 520px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #1e293b; /* dark */
+  color: #fff;
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 18px;
+  color: #facc15; /* yellow */
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+input, select {
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #475569;
+  background: #0f172a;
+  color: #fff;
+  font-size: 14px;
+}
+
+.error {
+  margin-top: 6px;
+  color: #f87171;
+  font-size: 12px;
+}
+
+.btn-submit {
+  padding: 12px;
+  background: #3b82f6; /* blue */
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-submit:hover {
+  opacity: 0.9;
+}

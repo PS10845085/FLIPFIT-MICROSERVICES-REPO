@@ -1,0 +1,79 @@
+
+.slot-list-container {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #1e293b; /* dark */
+  color: #fff;
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 16px;
+  color: #facc15; /* yellow */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #475569;
+}
+
+th {
+  background-color: #334155;
+  color: #facc15;
+  font-weight: bold;
+}
+
+tr:hover {
+  background-color: #0f172a;
+}
+
+/* Actions buttons inline */
+.actions-cell {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.btn-update {
+  background-color: #3b82f6; /* blue */
+  color: #fff;
+}
+
+.btn-delete {
+  background-color: #ef4444; /* red */
+  color: #fff;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.loading, .error, .empty {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 16px;
+}
+.error {
+  color: #f87171;
+}
+.empty {
+  color: #94a3b8;
+}

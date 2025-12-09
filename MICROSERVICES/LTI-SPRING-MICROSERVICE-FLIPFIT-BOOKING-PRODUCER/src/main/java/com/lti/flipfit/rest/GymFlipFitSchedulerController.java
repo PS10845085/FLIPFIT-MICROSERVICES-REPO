@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,14 @@ import com.lti.flipfit.service.GymFlipFitSchedulerService;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(
+    origins = "http://localhost:4200",       // Allowed origin (Angular app)
+    allowedHeaders = "*",                    // Allow all headers or specify: {"Authorization", "Content-Type"}
+    exposedHeaders = {"Authorization"},      // Headers exposed to the client
+    methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS},
+    allowCredentials = "true"                // If you need cookies/session
+)
+
 public class GymFlipFitSchedulerController {
 
 	private final GymFlipFitSchedulerService schedulerService;

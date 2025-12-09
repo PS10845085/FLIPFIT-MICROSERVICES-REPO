@@ -17,6 +17,14 @@ import com.lti.flipfit.service.GymFlipFitSlotService;
 
 @RestController
 @RequestMapping("/slots")
+@CrossOrigin(
+    origins = "http://localhost:4200",       // Allowed origin (Angular app)
+    allowedHeaders = "*",                    // Allow all headers or specify: {"Authorization", "Content-Type"}
+    exposedHeaders = {"Authorization"},      // Headers exposed to the client
+    methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS},
+    allowCredentials = "true"                // If you need cookies/session
+)
+
 public class GymFlipFitSlotController {
 
     private final GymFlipFitSlotService slotService;

@@ -1,0 +1,26 @@
+
+<div class="gym-center-container">
+  <h2>Gym Centers</h2>
+
+  <!-- Table of Gym Centers -->
+  <table class="center-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Location</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let center of gymCenters">
+        <td>{{ center.id }}</td>
+        <td>{{ center.name }}</td>
+        <td>{{ center.location }}</td>
+        <td>
+          <button class="update-btn" (click)="updateCenter(center.id)">Update</button>
+          <button class="delete-btn" (click)="deleteCenter(center.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>

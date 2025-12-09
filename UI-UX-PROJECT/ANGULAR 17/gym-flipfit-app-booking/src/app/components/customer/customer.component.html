@@ -1,0 +1,43 @@
+
+<div class="customer-container">
+  <h2>Customer List</h2>
+
+  <!-- Add Customer Form -->
+  <form (ngSubmit)="addCustomer()" #customerForm="ngForm" class="form-container">
+    <input
+      type="text"
+      placeholder="Enter Name"
+      [(ngModel)]="newCustomer.name"
+      name="name"
+      required
+    />
+    <input
+      type="number"
+      placeholder="Enter Age"
+      [(ngModel)]="newCustomer.age"
+      name="age"
+      required
+    />
+    <button type="submit" [disabled]="!customerForm.valid">Add Customer</button>
+  </form>
+
+  <!-- Customer Table -->
+  <table class="customer-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let customer of customers; let i = index">
+        <td>{{ customer.name }}</td>
+        <td>{{ customer.age }}</td>
+        <td>
+          <button class="edit-btn" (click)="editCustomer(i)">Edit</button>
+          <button class="delete-btn" (click)="deleteCustomer(i)">Delete</button> 
+        </td>
+      </tr>
+    </tbody>
+  </table>

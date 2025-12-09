@@ -1,0 +1,43 @@
+
+<div class="booking-container">
+  <h2>My Gym Bookings</h2>
+
+  <div *ngIf="loading" class="loading">Loading bookings...</div>
+
+  <table *ngIf="bookings.length > 0; else noBookings">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>User</th>
+        <th>Schedule</th>
+        <th>Slot</th>
+        <th>Status</th>
+        <th>Booked At</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let booking of bookings">
+        <td>{{ booking.id }}</td>
+        <td>
+          {{ booking.user.firstName }} {{ booking.user.lastName }}<br />
+          <small>{{ booking.user.email }}</small>
+        </td>
+        <td>
+          From: {{ booking.schedule.validFrom }}<br />
+          Till: {{ booking.schedule.validTill }}
+        </td>
+        <td>
+          {{ booking.schedule.slot.startTime }} - {{ booking.schedule.slot.endTime }}<br />
+          Date: {{ booking.schedule.slot.slotDate }}<br />
+          Capacity: {{ booking.schedule.slot.capacity }} | Booked: {{ booking.schedule.slot.bookedCount }}
+        </td>
+        <td>{{ booking.status }}</td>
+        <td>{{ formatDate(booking.bookedAt) }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #noBookings>
+    <p>No bookings found for this user.</p>
+  </ng-template>
+</div>

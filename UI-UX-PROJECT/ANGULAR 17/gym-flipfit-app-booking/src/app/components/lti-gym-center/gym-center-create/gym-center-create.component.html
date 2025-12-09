@@ -1,0 +1,22 @@
+
+<div class="create-container">
+  <h2>Create Gym Center</h2>
+  <form (ngSubmit)="createCenter()" #centerForm="ngForm">
+    <!-- Basic Details -->
+    <input type="text" placeholder="Center Name" [(ngModel)]="center.name" name="name" required />
+    <input type="email" placeholder="Email ID" [(ngModel)]="center.emailId" name="emailId" />
+    <input type="text" placeholder="Phone Number" [(ngModel)]="center.phoneNo" name="phoneNo" />
+    <input type="number" placeholder="Owner ID" [(ngModel)]="center.ownerId" name="ownerId" required />
+
+    <!-- Address Details -->
+    <input type="text" placeholder="Address Line 1" [(ngModel)]="center.address.line1" name="line1" required />
+    <input type="text" placeholder="Address Line 2" [(ngModel)]="center.address.line2" name="line2" />
+    <input type="text" placeholder="City" [(ngModel)]="center.address.city" name="city" required />
+    <input type="text" placeholder="State" [(ngModel)]="center.address.state" name="state" required />
+    <input type="text" placeholder="Postal Code" [(ngModel)]="center.address.postalCode" name="postalCode" required />
+    <input type="text" placeholder="Country" [(ngModel)]="center.address.country" name="country" required />
+
+    <button type="submit" [disabled]="!centerForm.valid">Create Center</button>
+  </form>
+
+  <pre *ngIf="response">{{ response | json }}</pre>

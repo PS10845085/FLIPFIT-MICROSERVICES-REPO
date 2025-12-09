@@ -1,0 +1,33 @@
+
+<div class="update-container">
+  <h2>Update Gym Center</h2>
+  <form (ngSubmit)="updateCenter()" #updateForm="ngForm">
+    <!-- Name -->
+    <div class="form-group">
+      <label for="name">Center Name</label>
+      <input type="text" id="name" [(ngModel)]="center.name" name="name" required />
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+      <label for="email">Email ID</label>
+      <input type="email" id="email" [(ngModel)]="center.emailId" name="emailId" />
+    </div>
+
+    <!-- Phone -->
+    <div class="form-group">
+      <label for="phone">Phone Number</label>
+      <input type="text" id="phone" [(ngModel)]="center.phoneNo" name="phoneNo" />
+    </div>
+
+    <!-- Status -->
+    <!-- <div class="form-group">
+      <label for="status">Status</label>
+      <select id="status" [(ngModel)]="center.status" name="status">
+        <option value="ACTIVE">ACTIVE</option>
+        <option value="INACTIVE">INACTIVE</option>
+      </select>
+    </div> -->
+
+    <button type="submit" [disabled]="!updateForm.valid">Update Center</button>
+  </form>

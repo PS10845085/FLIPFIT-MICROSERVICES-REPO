@@ -1,0 +1,25 @@
+
+<!-- components/scheduler/scheduler-create.component.html -->
+<div class="schedule-form-container">
+  <h2>{{ isUpdateMode ? 'Update Schedule' : 'Create Schedule' }}</h2>
+
+  <form [formGroup]="scheduleForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="validFrom">Valid From</label>
+      <input id="validFrom" type="date" formControlName="validFrom" />
+    </div>
+
+    <div class="form-group">
+      <label for="validTill">Valid Till</label>
+      <input id="validTill" type="date" formControlName="validTill" />
+    </div>
+
+    <button type="submit">
+      {{ isUpdateMode ? 'Update Schedule' : 'Create Schedule' }}
+    </button>
+
+    <button *ngIf="isUpdateMode" type="button" (click)="onCancelEdit()">
+      Cancel Edit
+    </button>
+  </form>
+</div>

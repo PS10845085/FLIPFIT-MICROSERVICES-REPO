@@ -1,0 +1,42 @@
+
+<div class="slot-list-container">
+  <h2>Gym Slots</h2>
+
+  <div *ngIf="loading" class="loading">Loading slots...</div>
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+  <table *ngIf="!loading && slots.length > 0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>Capacity</th>
+        <th>Booked</th>
+        <th>Slot Date</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let slot of slots">
+        <td>{{ slot.id }}</td>
+        <td>{{ slot.startTime }}</td>
+        <td>{{ slot.endTime }}</td>
+        <td>{{ slot.capacity }}</td>
+        <td>{{ slot.bookedCount }}</td>
+        <td>{{ slot.slotDate }}</td>
+        <td>{{ slot.status }}</td>
+        <td class="actions-cell">
+          <button class="btn btn-update" (click)="onUpdate(slot)">Update</button>
+          <button class="btn btn-delete" (click)="onDelete(slot.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && slots.length === 0" class="empty">
+    No slots found.
+  </div>
+</div>

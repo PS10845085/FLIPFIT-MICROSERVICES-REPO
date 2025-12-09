@@ -1,0 +1,16 @@
+
+/* src/app/app.component.css */
+.nav-bar {
+  display: flex;
+  gap: 20px;
+  background: #1e293b;
+  padding: 10px;
+}
+.nav-bar a {
+  color: #facc15;
+  text-decoration: none;
+  font-weight: bold;
+}
+.nav-bar a.active {
+  text-decoration: underline;
+}

@@ -1,0 +1,104 @@
+
+<!-- src/app/components/user/user.component.html -->
+<div class="container">
+  <h2>User Management</h2>
+
+  <!-- Add User -->
+  <div class="card">
+    <h3>Add User</h3>
+    <form (ngSubmit)="createUser()" #addForm="ngForm" class="form-grid">
+      <div class="form-field">
+        <label for="id">ID (number)</label>
+        <input id="id" name="id" type="number" [(ngModel)]="addUserForm.id" />
+      </div>
+
+      <div class="form-field">
+        <label for="firstname">First Name</label>
+        <input id="firstname" name="firstname" type="text" [(ngModel)]="addUserForm.firstname" />
+      </div>
+
+      <div class="form-field">
+        <label for="lastname">Last Name</label>
+        <input id="lastname" name="lastname" type="text" [(ngModel)]="addUserForm.lastname" />
+      </div>
+
+      <div class="form-field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" [(ngModel)]="addUserForm.email" />
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn primary">Add User</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Users Table -->
+  <div class="card">
+    <h3>Users</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-id">ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th class="col-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of users">
+          <!-- ID -->
+          <td class="mono">{{ u.id }}</td>
+
+          <!-- First Name -->
+          <td>
+            <ng-container *ngIf="editingId !== u.id; else editFirstName">
+              {{ u.firstname }}
+            </ng-container>
+            <ng-template #editFirstName>
+              <input type="text" [(ngModel)]="editModel!.firstname" />
+            </ng-template>
+          </td>
+
+          <!-- Last Name -->
+          <td>
+            <ng-container *ngIf="editingId !== u.id; else editLastName">
+              {{ u.lastname }}
+            </ng-container>
+            <ng-template #editLastName>
+              <input type="text" [(ngModel)]="editModel!.lastname" />
+            </ng-template>
+          </td>
+
+          <!-- Email -->
+          <td>
+            <ng-container *ngIf="editingId !== u.id; else editEmail">
+              {{ u.email }}
+            </ng-container>
+            <ng-template #editEmail>
+              <input type="email" [(ngModel)]="editModel!.email" />
+            </ng-template>
+          </td>
+
+          <!-- Actions -->
+          <td class="actions">
+            <ng-container *ngIf="editingId !== u.id; else editingActions">
+              <button class="btn" (click)="startEdit(u)">Edit</button>
+              <button class="btn danger" (click)="deleteUser(u.id)">Delete</button>
+            </ng-container>
+            <ng-template #editingActions>
+              <button class="btn success" (click)="saveEdit()">Save</button>
+              <button class="btn" (click)="cancelEdit()">Cancel</button>
+            </ng-template>
+          </td>
+        </tr>
+
+        <!-- Empty state -->
+        <tr *ngIf="users?.length === 0">
+          <td colspan="5" class="empty">No users found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

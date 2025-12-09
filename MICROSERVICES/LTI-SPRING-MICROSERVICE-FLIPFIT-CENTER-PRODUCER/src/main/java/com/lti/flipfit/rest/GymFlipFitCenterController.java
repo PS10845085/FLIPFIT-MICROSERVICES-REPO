@@ -95,6 +95,14 @@ public class GymFlipFitCenterController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 		
 	}
+	
+	
+	@RequestMapping(value = "/centers-list", method = RequestMethod.GET)
+	public List<GymFlipFitCenter> getCentersList() {
+		List<GymFlipFitCenter> centerList = centerService.findAllCenters();
+		return centerList;
+		
+	}
 
 /**
      * Retrieves all centers that are currently marked ACTIVE.

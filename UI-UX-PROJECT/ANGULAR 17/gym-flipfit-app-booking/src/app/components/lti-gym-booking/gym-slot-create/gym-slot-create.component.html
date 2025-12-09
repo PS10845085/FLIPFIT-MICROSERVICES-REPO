@@ -1,0 +1,74 @@
+
+<div class="slot-form-container">
+  <h2>{{ isUpdateMode ? 'Update Slot' : 'Create Slot' }}</h2>
+
+  <!-- When in update mode, submit calls onUpdateSubmit(); otherwise onCreateSubmit() -->
+  <form [formGroup]="slotForm" (ngSubmit)="isUpdateMode ? onUpdateSubmit() : onCreateSubmit()">
+    <!-- Start Time -->
+    <div class="form-group">
+      <label for="startTime">Start Time</label>
+      <select id="startTime" formControlName="startTime">
+        <option value="" disabled>Select start time</option>
+        <option *ngFor="let t of timeOptions" [value]="t">{{ t }}</option>
+      </select>
+      <div class="error" *ngIf="slotForm.get('startTime')?.touched && slotForm.get('startTime')?.invalid">
+        Start time is required
+      </div>
+    </div>
+
+    <!-- End Time -->
+    <div class="form-group">
+      <label for="endTime">End Time</label>
+      <select id="endTime" formControlName="endTime">
+        <option value="" disabled>Select end time</option>
+        <option *ngFor="let t of timeOptions" [value]="t">{{ t }}</option>
+      </select>
+      <div class="error" *ngIf="slotForm.get('endTime')?.touched && slotForm.get('endTime')?.invalid">
+        End time is required
+      </div>
+    </div>
+
+    <!-- Capacity -->
+    <div class="form-group">
+      <label for="capacity">Capacity</label>
+      <input id="capacity" type="number" formControlName="capacity" min="1" />
+      <div class="error" *ngIf="slotForm.get('capacity')?.touched && slotForm.get('capacity')?.invalid">
+        Capacity must be at least 1
+      </div>
+    </div>
+
+    <!-- Booked Count -->
+    <!-- <div class="form-group">
+      <label for="bookedCount">Booked Count</label>
+      <input id="bookedCount" type="number" formControlName="bookedCount" min="0" />
+      <div class="error" *ngIf="slotForm.get('bookedCount')?.touched && slotForm.get('bookedCount')?.invalid">
+        Booked count cannot be negative
+      </div>
+    </div> -->
+
+    <!-- Slot Date -->
+    <div class="form-group">
+      <label for="slotDate">Slot Date</label>
+      <input id="slotDate" type="date" formControlName="slotDate" />
+      <div class="error" *ngIf="slotForm.get('slotDate')?.touched && slotForm.get('slotDate')?.invalid">
+        Slot date is required
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="form-group">
+      <label for="status">Status</label>
+      <select id="status" formControlName="status">
+        <option value="" disabled>Select status</option>
+        <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+      </select>
+      <div class="error" *ngIf="slotForm.get('status')?.touched && slotForm.get('status')?.invalid">
+        Status is required
+      </div>
+    </div>
+
+    <button type="submit" class="btn-submit">
+      {{ isUpdateMode ? 'Update Slot' : 'Create Slot' }}
+    </button>
+  </form>
+</div>

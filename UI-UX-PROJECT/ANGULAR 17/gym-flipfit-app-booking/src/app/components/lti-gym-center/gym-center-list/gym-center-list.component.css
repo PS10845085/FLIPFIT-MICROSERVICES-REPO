@@ -1,0 +1,103 @@
+
+/* Container styling */
+.list-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #1e293b; /* Dark navy background */
+  color: #fff;
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+}
+
+/* Heading */
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #facc15; /* Yellow heading */
+}
+
+/* Search bar */
+.search-bar {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.search-bar input {
+  width: 60%;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #475569;
+  background: #0f172a;
+  color: #fff;
+  font-size: 14px;
+}
+
+/* Table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #475569;
+}
+
+th {
+  background-color: #334155;
+  color: #facc15;
+  font-weight: bold;
+}
+
+tr:hover {
+  background-color: #0f172a;
+}
+
+/* Action buttons container */
+td:last-child {
+  display: flex; /* ✅ Align buttons side by side */
+  gap: 8px;      /* Space between buttons */
+}
+
+/* Common button styles */
+.btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Update button */
+.btn-update {
+  background-color: #3b82f6; /* Blue */
+  color: #fff;
+}
+
+/* Delete button */
+.btn-delete {
+  background-color: #ef4444; /* Red */
+  color: #fff;
+}
+
+/* Hover effect */
+.btn:hover {
+  opacity: 0.9;
+}
+
+/* Loading, error, empty states */
+.loading, .error, .empty {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 16px;
+}
+.error {
+  color: #f87171;
+}
+.empty {
+  color: #94a3b8;
+}

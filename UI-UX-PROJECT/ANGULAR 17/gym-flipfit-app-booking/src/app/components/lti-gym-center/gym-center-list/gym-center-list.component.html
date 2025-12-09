@@ -1,0 +1,45 @@
+<div class="list-container">
+  <h2>Gym Centers</h2>
+
+  <!-- Search Field -->
+  <div class="search-bar">
+    <input type="text" placeholder="Search by ID, Name, or Owner ID" [(ngModel)]="searchTerm"
+      (input)="filterCenters()" />
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading centers...</div>
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+  <table *ngIf="!loading && filteredCenters.length > 0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Status</th>
+        <th>Owner ID</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let center of filteredCenters">
+        <td>{{ center.id }}</td>
+        <td>{{ center.name }}</td>
+        <td>{{ center.emailId }}</td>
+        <td>{{ center.phoneNo }}</td>
+        <td>{{ center.status }}</td>
+        <td>{{ center.ownerId }}</td>
+        <td>
+          <!-- ✅ Action buttons -->
+          <button class="btn btn-update" (click)="onUpdate(center)">Update</button>
+          <button class="btn btn-delete" (click)="onDelete(center.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && filteredCenters.length === 0" class="empty">
+    No centers found.
+  </div>
+</div>

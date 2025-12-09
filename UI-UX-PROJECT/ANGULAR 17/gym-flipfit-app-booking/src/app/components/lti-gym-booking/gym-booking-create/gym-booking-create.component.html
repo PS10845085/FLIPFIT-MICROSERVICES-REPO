@@ -1,0 +1,51 @@
+
+<div class="booking-create-container">
+  <h2>Create Gym Booking</h2>
+
+  <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()" class="booking-form">
+    <!-- User ID -->
+    <div class="form-group">
+      <label for="userId">User ID</label>
+      <input
+        id="userId"
+        type="number"
+        formControlName="userId"
+        placeholder="Enter User ID"
+      />
+      <div class="error" *ngIf="f['userId'].touched && f['userId'].invalid">
+        <small *ngIf="f['userId'].errors?.['required']">User ID is required.</small>
+        <small *ngIf="f['userId'].errors?.['min']">Must be greater than 0.</small>
+        <small *ngIf="f['userId'].errors?.['integer']">Must be an integer.</small>
+      </div>
+    </div>
+
+    <!-- Schedule ID -->
+    <div class="form-group">
+      <label for="scheduleId">Schedule ID</label>
+      <input
+        id="scheduleId"
+        type="number"
+        formControlName="scheduleId"
+        placeholder="Enter Schedule ID"
+      />
+      <div class="error" *ngIf="f['scheduleId'].touched && f['scheduleId'].invalid">
+        <small *ngIf="f['scheduleId'].errors?.['required']">Schedule ID is required.</small>
+        <small *ngIf="f['scheduleId'].errors?.['min']">Must be greater than 0.</small>
+        <small *ngIf="f['scheduleId'].errors?.['integer']">Must be an integer.</small>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" [disabled]="loading || bookingForm.invalid">
+      {{ loading ? 'Creating...' : 'Create Booking' }}
+    </button>
+  </form>
+
+  <!-- Optional: Show created booking summary -->
+  <div *ngIf="createdBooking" class="success-message">
+    <h3>Booking Created Successfully!</h3>
+    <p>Booking ID: {{ createdBooking.id }}</p>
+    <p>User: {{ createdBooking.user.firstName }} {{ createdBooking.user.lastName }}</p>
+    <p>Schedule: {{ createdBooking.schedule.id }} ({{ createdBooking.schedule.validFrom }} → {{ createdBooking.schedule.validTill }})</p>
+    <p>Status: {{ createdBooking.status }}</p>
+  </div>
