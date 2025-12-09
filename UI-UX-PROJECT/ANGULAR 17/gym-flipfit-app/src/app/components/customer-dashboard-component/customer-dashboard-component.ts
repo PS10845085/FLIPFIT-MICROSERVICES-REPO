@@ -21,7 +21,17 @@ menu: MenuItem[] = [
     { label: 'Profile',       icon: 'person',           route: 'profile' }
   ];
 
+  displayName = 'Customer';
+
   constructor(private auth: AuthService, private router: Router) {}
+
+  ngOnInit(): void {
+    const u = this.auth.currentUser();
+    // Prefer username; fall back gracefully
+    this.displayName = u?.username
+      ? u.username
+      : 'Customer';
+  }
 
   logout() {
     this.auth.logout();

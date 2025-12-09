@@ -14,7 +14,10 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary" class="top-toolbar">
-      <span class="flex-1">Admin Dashboard</span>
+      
+  <!-- Show "Admin / {username}" OR just the username -->
+      <span class="flex-1">Hello, {{ displayName }} !</span>
+
       <!-- <button mat-button (click)="logout()">
         <mat-icon>logout</mat-icon> Logout
       </button> -->

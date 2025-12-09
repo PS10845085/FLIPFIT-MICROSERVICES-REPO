@@ -37,6 +37,9 @@ import { CustomerWorkoutsComponent } from './components/customer-dashboard-compo
 import { CustomerSubscriptionsComponent } from './components/customer-dashboard-component/pages/customer-subscriptions-component/customer-subscriptions-component';
 import { CustomerProfileComponent } from './components/customer-dashboard-component/pages/customer-profile-component/customer-profile-component';
 
+import { AdminOwnersComponent } from './components/admin-dashboard-component/pages/admin-owners-component/admin-owners-component';
+
+
 const routes: Routes = [
   // Public route
   { path: 'login', component: LoginComponent,  canActivate: [guestGuard]},
@@ -70,6 +73,9 @@ const routes: Routes = [
       { path: 'overview', component: AdminOverviewComponent },
       { path: 'gyms', component: AdminGymsComponent },
       { path: 'users', component: AdminCustomersComponent },
+
+      { path: 'owners', component: AdminOwnersComponent },
+
       { path: 'settings', component: AdminSettingsComponent },
       { path: 'audits', component: AdminAuditsComponent }
     ]

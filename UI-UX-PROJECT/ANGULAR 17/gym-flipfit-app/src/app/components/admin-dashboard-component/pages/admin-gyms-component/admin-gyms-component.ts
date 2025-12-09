@@ -1,16 +1,18 @@
 
-
 // src/app/components/admin-dashboard-component/pages/admin-gyms.component.ts
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { CenterService, Center } from '../../../../services/center.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ChangeStatusDialogComponent, UserStatus } from '../change-status-dialog-component/change-status-dialog-component';
 
 type GymRow = {
   id: number;
   name: string;
-  ownerId: number;
+ // ownerId: number;
   emailId: string;
   phoneNo: string;
   city: string;
@@ -32,8 +34,17 @@ export class AdminGymsComponent implements OnInit {
   error: string | null = null;
 
   displayedColumns = [
-    'id', 'name', 'ownerId', 'emailId', 'phoneNo',
-    'city', 'state', 'postalCode', 'country', 'status'
+    'id',
+    'name',
+    //'ownerId',
+    'emailId', 
+    'phoneNo',
+    'city', 
+    'state', 
+    'postalCode', 
+    'country', 'status',
+    'actions' 
+    
   ];
 
   dataSource = new MatTableDataSource<GymRow>([]);
@@ -42,7 +53,11 @@ export class AdminGymsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private centers: CenterService) {}
+  constructor(
+    private centers: CenterService,
+    private dialog: MatDialog,
+    private snack: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     this.load();
@@ -65,7 +80,6 @@ export class AdminGymsComponent implements OnInit {
         this.total = rows.length;
         this.loading = false;
 
-        // Defensive re-attach
         if (this.paginator) this.dataSource.paginator = this.paginator;
         if (this.sort) this.dataSource.sort = this.sort;
       },
@@ -89,7 +103,7 @@ export class AdminGymsComponent implements OnInit {
       const f = filter.toLowerCase();
       return (
         row.name.toLowerCase().includes(f) ||
-        String(row.ownerId).includes(f) ||
+      //  String(row.ownerId).includes(f) ||
         (row.emailId ?? '').toLowerCase().includes(f) ||
         (row.phoneNo ?? '').toLowerCase().includes(f) ||
         (row.city ?? '').toLowerCase().includes(f) ||
@@ -108,7 +122,7 @@ export class AdminGymsComponent implements OnInit {
     return {
       id: c.id,
       name: c.name,
-      ownerId: c.ownerId,
+     // ownerId: c.ownerId,
       emailId: c.emailId ?? '',
       phoneNo: c.phoneNo ?? '',
       city: a.city ?? '',
@@ -118,5 +132,40 @@ export class AdminGymsComponent implements OnInit {
       status: c.status,
       addressLine
     };
+  }
+
+  // ===== NEW: Change center status =====
+  changeStatus(row: GymRow): void {
+    const dialogRef = this.dialog.open(ChangeStatusDialogComponent, {
+      width: '360px',
+      data: {
+        currentStatus: row.status,
+        username: row.name // Using center name for context in dialog
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((newStatus: UserStatus | null) => {
+      if (!newStatus || newStatus === row.status) return;
+
+      this.loading = true;
+      this.centers.updateCenterStatus({ id: row.id, status: newStatus as GymRow['status'] }).subscribe({
+        next: (updatedCenter) => {
+          this.loading = false;
+          // Update local row for instant feedback
+          row.status = updatedCenter.status;
+          this.dataSource.data = [...this.dataSource.data]; // trigger change detection
+
+          this.snack.open(`Center "${updatedCenter.name}" status updated to ${updatedCenter.status}`, 'OK', {
+            duration: 2500
+          });
+        },
+        error: (err) => {
+          this.loading = false;
+          this.snack.open(err.message ?? 'Failed to update center status', 'Dismiss', {
+            duration: 3000
+          });
+        }
+      });
+    });
   }
 }

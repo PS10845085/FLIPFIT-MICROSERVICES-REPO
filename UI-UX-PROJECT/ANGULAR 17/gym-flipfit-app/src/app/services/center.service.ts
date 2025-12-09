@@ -31,6 +31,14 @@ export interface ApiCentersResponse {
   data: Center[] | null;
 }
 
+
+export interface ApiUpdateCenterStatusResponse {
+  status: 'SUCCESS' | 'ERROR';
+  message: string;
+  data: Center | null;
+}
+
+
 @Injectable({ providedIn: 'root' })
 export class CenterService {
   private readonly CENTER_SERVICE_BASE_URL = 'http://localhost:8081/api';
@@ -64,4 +72,25 @@ export class CenterService {
       })
     );
   }
+
+  
+updateCenterStatus(payload: { id: number; status: 'ACTIVE' | 'INACTIVE' | 'PENDING' }): Observable<Center> {
+    const url = `${this.CENTER_SERVICE_BASE_URL}/update-center-status`;
+    return this.http.put<ApiUpdateCenterStatusResponse>(url, payload, {
+      headers: { 'Content-Type': 'application/json', skipAuth: 'true' }
+    }).pipe(
+      map(res => {
+        if (res.status === 'SUCCESS' && res.data) return res.data;
+        throw new Error(res.message || 'Failed to update center status');
+      }),
+      catchError((err: HttpErrorResponse) => {
+        const message =
+          (err.error && typeof err.error === 'object' && 'message' in err.error)
+            ? (err.error as any).message
+            : err.message ?? 'Failed to update center status';
+        return throwError(() => new Error(message));
+      })
+    );
+  }
 }
+

@@ -381,6 +381,25 @@ public class UserServiceImpl implements UserService {
 		}
 
 
+/**
+ * Service implementation for user-related operations.
+ * <p>
+ * Provides methods to manage and retrieve user data, including authentication,
+ * registration, and profile fetching. This class interacts with the persistence
+ * layer via {@link com.lti.flipfit.repository.UserRepository}.
+ * </p>
+ *
+ * <h2>Responsibilities</h2>
+ * <ul>
+ *   <li>Fetch user details by username or ID.</li>
+ *   <li>Handle user registration and authentication logic.</li>
+ *   <li>Throw appropriate exceptions for invalid or missing data.</li>
+ * </ul>
+ *
+ * @author FlipFit
+ * @since 1.0
+ */
+
 		@Override
 		public GymUser getUserByUserName(String username) {
 			// TODO Auto-generated method stub

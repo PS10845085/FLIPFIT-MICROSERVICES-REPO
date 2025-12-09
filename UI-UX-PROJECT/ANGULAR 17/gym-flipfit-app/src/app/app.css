@@ -19,3 +19,34 @@ mat-form-field {
     float: right;
     width: 100%;
 }
+
+
+/* Ensure toolbar items align nicely */
+.left-aligned-menu {
+  display: flex;
+  align-items: center;
+}
+
+/* Click area of the logo */
+.app-logo-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+/* Logo image styling */
+.app-logo {
+  /* Keep the image sharp and properly rounded if your logo has curved corners */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  border-radius: 6px; /* adjust or remove depending on your logo design */
+  /* If you render 64px logo, you can override via:
+     width: 64px; height: 64px; */
+}
+
+/* Optional brand text (if used) */
+.brand-text {
+  font-weight: 600;
+  letter-spacing: .2px;
+  opacity: .9;
+}

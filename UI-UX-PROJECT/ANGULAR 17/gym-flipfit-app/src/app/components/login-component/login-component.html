@@ -1,7 +1,8 @@
 <mat-card>
   <mat-card-content>
     <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="form">
-      <h2>Log In</h2>
+       <img matButton="elevated"  src="../../../assets/logo-flipfit-64.png"  width="64" height="64" style="align-self: center;" alt="FlipFit logo"/>
+      <h3>GYM FLIPFIT APP LOGIN</h3>
         <mat-form-field appearance="outline">
           <mat-label>Username</mat-label>
           <input matInput formControlName="username" placeholder="Enter your username">

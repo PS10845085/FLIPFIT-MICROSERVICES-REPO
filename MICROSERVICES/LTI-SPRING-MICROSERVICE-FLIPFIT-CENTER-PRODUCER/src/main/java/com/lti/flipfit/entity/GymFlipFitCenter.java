@@ -47,7 +47,7 @@ public class GymFlipFitCenter {
 
 	@Enumerated(EnumType.STRING)
 	@Column(length = 20, nullable = false)
-	private Status status = Status.INACTIVE;
+	private Status status = Status.PENDING;
 
 	public Long getId() {
 		return id;

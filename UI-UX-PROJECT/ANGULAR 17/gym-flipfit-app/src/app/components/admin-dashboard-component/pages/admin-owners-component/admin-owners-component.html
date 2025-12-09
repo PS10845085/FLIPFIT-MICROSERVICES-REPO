@@ -1,7 +1,7 @@
 
-<!-- src/app/components/admin-dashboard-component/pages/admin-gyms.component.html -->
+<!-- src/app/components/admin-dashboard-component/pages/admin-owners-component/admin-owners-component.html -->
 <mat-toolbar color="primary" class="toolbar">
-  <span class="flex-1">Admin / Gyms Centers</span>
+  <span class="flex-1">Admin / Owners</span>
   <button mat-stroked-button color="primary" (click)="refresh()" [disabled]="loading">
     <mat-icon>refresh</mat-icon>
     Refresh
@@ -11,9 +11,8 @@
 <div class="panel">
   <div class="controls">
     <mat-form-field appearance="outline" class="filter">
-      <mat-label>Search gyms</mat-label>
-      <input matInput (keyup)="applyFilter($event.target.value)"
-             placeholder="Name, ownerId, email, phone, city, status..." />
+      <mat-label>Search owners</mat-label>
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Name, email, username, city, status..." />
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
     <div class="info">Total: {{ total }}</div>
@@ -25,7 +24,6 @@
     </div>
 
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z1">
-
       <!-- ID -->
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
@@ -35,29 +33,25 @@
       <!-- Name -->
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-        <td mat-cell *matCellDef="let r">
-          <div class="name-cell">
-            <div class="name">{{ r.name }}</div>
-          </div>
-        </td>
+        <td mat-cell *matCellDef="let r">{{ r.name }}</td>
       </ng-container>
-
-      <!-- Owner -->
-      <!-- <ng-container matColumnDef="ownerId">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner</th>
-        <td mat-cell *matCellDef="let r">{{ r.ownerId }}</td>
-      </ng-container> -->
 
       <!-- Email -->
-      <ng-container matColumnDef="emailId">
+      <ng-container matColumnDef="email">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
-        <td mat-cell *matCellDef="let r">{{ r.emailId }}</td>
+        <td mat-cell *matCellDef="let r">{{ r.email }}</td>
       </ng-container>
 
-      <!-- Phone -->
-      <ng-container matColumnDef="phoneNo">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone</th>
-        <td mat-cell *matCellDef="let r">{{ r.phoneNo }}</td>
+      <!-- Mobile -->
+      <ng-container matColumnDef="mobile">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Mobile</th>
+        <td mat-cell *matCellDef="let r">{{ r.mobile }}</td>
+      </ng-container>
+
+      <!-- Center -->
+      <ng-container matColumnDef="center">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Center</th>
+        <td mat-cell *matCellDef="let r">{{ r.center }}</td>
       </ng-container>
 
       <!-- City -->
@@ -66,35 +60,40 @@
         <td mat-cell *matCellDef="let r">{{ r.city }}</td>
       </ng-container>
 
-      <!-- State -->
-      <ng-container matColumnDef="state">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>State</th>
-        <td mat-cell *matCellDef="let r">{{ r.state }}</td>
-      </ng-container>
-
-      <!-- PostalCode -->
-      <ng-container matColumnDef="postalCode">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Postal</th>
-        <td mat-cell *matCellDef="let r">{{ r.postalCode }}</td>
-      </ng-container>
-
-      <!-- Country -->
-      <ng-container matColumnDef="country">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Country</th>
-        <td mat-cell *matCellDef="let r">{{ r.country }}</td>
-      </ng-container>
-
       <!-- Status -->
       <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
         <td mat-cell *matCellDef="let r">
-          <span class="status"
-                [class.active]="r.status==='ACTIVE'"
-                [class.pending]="r.status==='PENDING'"
-                [class.inactive]="r.status==='INACTIVE'">
+          <span class="status" [class.active]="r.status==='ACTIVE'"
+                              [class.pending]="r.status==='PENDING'"
+                              [class.inactive]="r.status==='INACTIVE'">
             {{ r.status }}
           </span>
         </td>
+      </ng-container>
+
+      <!-- Role -->
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Role</th>
+        <td mat-cell *matCellDef="let r">{{ r.role }}</td>
+      </ng-container>
+
+      <!-- Username -->
+      <ng-container matColumnDef="username">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Username</th>
+        <td mat-cell *matCellDef="let r">{{ r.username }}</td>
+      </ng-container>
+
+      <!-- Created -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Created</th>
+        <td mat-cell *matCellDef="let r">{{ r.createdAt }}</td>
+      </ng-container>
+
+      <!-- Updated -->
+      <ng-container matColumnDef="updatedAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Updated</th>
+        <td mat-cell *matCellDef="let r">{{ r.updatedAt }}</td>
       </ng-container>
 
       <!-- Actions -->
@@ -120,7 +119,7 @@
   </div>
 
   <mat-card class="error" *ngIf="error">
-    <mat-card-title>Failed to load centers</mat-card-title>
+    <mat-card-title>Failed to load owners</mat-card-title>
     <mat-card-content>{{ error }}</mat-card-content>
     <mat-card-actions>
       <button mat-stroked-button color="primary" (click)="refresh()">

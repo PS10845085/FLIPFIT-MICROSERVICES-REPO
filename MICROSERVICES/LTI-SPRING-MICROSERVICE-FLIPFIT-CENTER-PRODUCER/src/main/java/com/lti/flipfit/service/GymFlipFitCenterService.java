@@ -1,8 +1,9 @@
 package com.lti.flipfit.service;
 
-import java.util.List;
+import java.util.List; 
 import java.util.Optional;
 
+import com.lti.flipfit.constant.Status;
 import com.lti.flipfit.dto.CreateCenterRequest;
 import com.lti.flipfit.entity.GymFlipFitCenter;
 
@@ -19,4 +20,6 @@ public interface GymFlipFitCenterService {
 	GymFlipFitCenter saveCenter(CreateCenterRequest createCenterRequest);
 
 	List<GymFlipFitCenter> findAllActiveCenters();
+	
+	public GymFlipFitCenter updateCenterStatusById(Long id, Status status);
 }

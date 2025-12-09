@@ -190,7 +190,7 @@ private loadRoles(): void {
         if (res.status === 'SUCCESS') {
           // Show success and start 5-sec countdown
           this.serverMessage = res.message || 'Registration successful';
-          this.redirectIn = 5;
+          this.redirectIn = 10;
 
           const interval = setInterval(() => {
             this.redirectIn--;

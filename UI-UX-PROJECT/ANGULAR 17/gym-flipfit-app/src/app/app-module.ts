@@ -61,7 +61,7 @@ import { AdminGymsComponent } from './components/admin-dashboard-component/pages
 import { AdminCustomersComponent } from './components/admin-dashboard-component/pages/admin-customers-component/admin-customers-component';
 import { AdminSettingsComponent } from './components/admin-dashboard-component/pages/admin-settings-component/admin-settings-component';
 import { AdminAuditsComponent } from './components/admin-dashboard-component/pages/admin-audits-component/admin-audits-component';
-
+import { AdminOwnersComponent } from './components/admin-dashboard-component/pages/admin-owners-component/admin-owners-component';
 // Customer pages
 import { CustomerOverviewComponent } from './components/customer-dashboard-component/pages/customer-overview-component/customer-overview-component';
 import { CustomerWorkoutsComponent } from './components/customer-dashboard-component/pages/customer-workouts-component/customer-workouts-component';
@@ -89,6 +89,7 @@ import { ChangeStatusDialogComponent } from './components/admin-dashboard-compon
     AdminOverviewComponent,
     AdminGymsComponent,
     AdminCustomersComponent,
+    AdminOwnersComponent,
     AdminSettingsComponent,
     AdminAuditsComponent,
     
@@ -96,7 +97,8 @@ import { ChangeStatusDialogComponent } from './components/admin-dashboard-compon
     CustomerWorkoutsComponent,
     CustomerSubscriptionsComponent,
     CustomerProfileComponent,
-    ChangeStatusDialogComponent
+    ChangeStatusDialogComponent,
+    AdminOwnersComponent
 
   ],
   imports: [
