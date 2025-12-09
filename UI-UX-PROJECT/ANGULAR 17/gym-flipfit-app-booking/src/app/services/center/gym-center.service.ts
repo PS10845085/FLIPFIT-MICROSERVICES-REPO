@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CenterRequest } from '../../models/gym-center/center-request';
-import { ApiResponse } from '../../models/gym-center/center-response';
+import { CenterResponse } from '../../models/gym-center/center-response';
 import { json } from 'stream/consumers';
 
 
@@ -19,28 +19,28 @@ export class GymCenterService {
     
   }
 
-  createCenter(centerData: CenterRequest): Observable<ApiResponse> {
+  createCenter(centerData: CenterRequest): Observable<CenterResponse> {
     // POST /api/gyms
     console.log("entered create center in service");
     console.log(JSON.stringify(centerData));
-    return this.httpClient.post<ApiResponse>(`${this.baseUrl}/createCenter`, JSON.stringify(centerData), { headers: this.headers });
+    return this.httpClient.post<CenterResponse>(`${this.baseUrl}/createCenter`, JSON.stringify(centerData), { headers: this.headers });
     console.log("data save success");
   }
 
   // Optional helper (not required, but useful)
-  getCenterById(id: number): Observable<ApiResponse> {
-    return this.httpClient.get<ApiResponse>(`${this.baseUrl}/${id}`);
+  getCenterById(id: number): Observable<CenterResponse> {
+    return this.httpClient.get<CenterResponse>(`${this.baseUrl}/${id}`);
   }
 
-  getAllCenters(): Observable<ApiResponse> {
-    return this.httpClient.get<ApiResponse>(`${this.baseUrl}/centers`, { headers: this.headers });
+  getAllCenters(): Observable<CenterResponse[]> {
+    return this.httpClient.get<CenterResponse[]>(`${this.baseUrl}/centers-list`, { headers: this.headers });
     console.log("entered getAllCenter service");
   }
 
 
   /** ✅ UPDATE: RESTful style */
-  updateCenter(id: number, centerData: CenterRequest): Observable<ApiResponse> {
-    return this.httpClient.put<ApiResponse>(
+  updateCenter(id: number, centerData: CenterRequest): Observable<CenterResponse> {
+    return this.httpClient.put<CenterResponse>(
       `${this.baseUrl}/updateCenter/${id}`,
       JSON.stringify(centerData),
       { headers: this.headers }

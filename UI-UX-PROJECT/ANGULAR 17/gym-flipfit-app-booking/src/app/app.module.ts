@@ -15,6 +15,8 @@ import { UserComponent } from './components/user/user.component';
 import { GymSlotListComponent } from './components/lti-gym-booking/gym-slot-list/gym-slot-list.component';
 import { GymSlotCreateComponent } from './components/lti-gym-booking/gym-slot-create/gym-slot-create.component';
 import { CommonModule } from '@angular/common';
+import { AnalysisComponent } from './components/analysis/analysis.component';
+import { ChartModule } from 'primeng/chart';
 import { GymSchedulerCreateComponent } from './components/lti-gym-booking/gym-scheduler-create/gym-scheduler-create.component';
 import { GymSchedulerListComponent } from './components/lti-gym-booking/gym-scheduler-list/gym-scheduler-list.component';
 import { GymBookingListComponent } from './components/lti-gym-booking/gym-booking-list/gym-booking-list.component';
@@ -31,6 +33,7 @@ import { GymBookingCreateComponent } from './components/lti-gym-booking/gym-book
     UserComponent,
     GymSlotListComponent,
     GymSlotCreateComponent,
+    AnalysisComponent,
     GymSchedulerCreateComponent,
     GymSchedulerListComponent,
     GymBookingListComponent,
@@ -42,6 +45,7 @@ import { GymBookingCreateComponent } from './components/lti-gym-booking/gym-book
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
+    ChartModule,
     HttpClientModule
   ],
   providers: [

@@ -1,26 +1,36 @@
-import { Router } from "@angular/router";
-import { Center } from "../../../models/gym-center/center-response";
-import { GymCenterService } from "../../../services/center/gym-center.service";
+import { Component } from '@angular/core';
+import { GymCenterService } from '../../../services/center/gym-center.service';
+import { CenterResponse } from '../../../models/gym-center/center-response';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 
+@Component({
+  selector: 'app-gym-center-list',
+  templateUrl: './gym-center-list.component.html',
+  styleUrl: './gym-center-list.component.css'
+})
 export class GymCenterListComponent {
-  centers: Center[] = [];
-  filteredCenters: Center[] = [];
+
+  centers: CenterResponse[] = [];
+  filteredCenters: CenterResponse[] = []
   loading = true;
   errorMessage = '';
   searchTerm = '';
 
-  constructor(private gymCenterService: GymCenterService, private router: Router) {}
+  constructor(private gymCenterService: GymCenterService,
+    private router: Router,
+    private route : ActivatedRoute
+  ) { }
 
-  ngOnInit(): void {
+ 
+ ngOnInit(): void {
     this.fetchCenters();
   }
 
   fetchCenters(): void {
     this.gymCenterService.getAllCenters().subscribe({
-      next: (response) => {
-        console.log(response);
-        this.centers = response.data; // ✅ extract array
-        this.filteredCenters = [...this.centers]; // ✅ now iterable
+      next: (data) => {
+        this.centers = data;
+        this.filteredCenters = [...data]; 
         this.loading = false;
       },
       error: (err) => {
@@ -34,7 +44,7 @@ export class GymCenterListComponent {
   filterCenters(): void {
     const term = this.searchTerm.toLowerCase().trim();
     if (!term) {
-      this.filteredCenters = [...this.centers];
+      this.filteredCenters = [...this.centers]; 
       return;
     }
 
@@ -45,17 +55,29 @@ export class GymCenterListComponent {
     );
   }
 
-  onUpdate(center: Center): void {
+// onUpdate(id: number): void {
+//   console.log('Update center with ID:', id);
+//   // Navigate to update page
+//   // Example: this.router.navigate(['/update-center', id]);
+// }
+
+ onUpdate(center: CenterResponse): void {
     this.router.navigate(['/create-center', center.id], { state: { center } });
+
   }
 
+
+ /** ✅ Delete with confirmation + UI update */
   onDelete(id: number): void {
     const agree = window.confirm(`Are you sure you want to delete center #${id}?`);
     if (!agree) return;
 
+    // optimistic: show loading state for this action (optional)
     this.loading = true;
+
     this.gymCenterService.deleteCenter(id).subscribe({
       next: () => {
+        // Remove from local arrays
         this.centers = this.centers.filter(c => c.id !== id);
         this.filteredCenters = this.filteredCenters.filter(c => c.id !== id);
         this.loading = false;
@@ -68,4 +90,12 @@ export class GymCenterListComponent {
       }
     });
   }
+
+
+onView(id: number): void {
+  console.log('View center details with ID:', id);
+  // Navigate to view page or open modal
+  // Example: this.router.navigate(['/view-center', id]);
+}
+
 }

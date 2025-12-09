@@ -6,6 +6,7 @@ import { GymCenterUpdateComponent } from './components/lti-gym-center/gym-center
 import { GymCenterCreateComponent } from './components/lti-gym-center/gym-center-create/gym-center-create.component';
 import { GymSlotListComponent } from './components/lti-gym-booking/gym-slot-list/gym-slot-list.component';
 import { GymSlotCreateComponent } from './components/lti-gym-booking/gym-slot-create/gym-slot-create.component';
+import { AnalysisComponent } from './components/analysis/analysis.component';
 import { GymSchedulerListComponent } from './components/lti-gym-booking/gym-scheduler-list/gym-scheduler-list.component';
 import { GymSchedulerCreateComponent } from './components/lti-gym-booking/gym-scheduler-create/gym-scheduler-create.component';
 import { GymBookingListComponent } from './components/lti-gym-booking/gym-booking-list/gym-booking-list.component';
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: 'schedule-list', component: GymSchedulerListComponent},
   { path: 'create-booking', component: GymBookingCreateComponent }, 
   { path: 'bookings-list', component: GymBookingListComponent},
+  { path: 'analysis', component: AnalysisComponent },
   { path: '', redirectTo: '/list-centers', pathMatch: 'full' }, // default route
   { path: '**', redirectTo: '/list-centers' }
 
